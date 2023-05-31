@@ -1,5 +1,11 @@
 // Override default variables before the import
-// $body-bg: #000;
+$dropdown-spacer: 0rem;
+
+@media (max-width: 540px) {
+    html {
+        font-size: 0.75rem !important;
+    }
+}
 
 // Import Bootstrap and its default variables
 @import '../node_modules/bootstrap/scss/bootstrap';

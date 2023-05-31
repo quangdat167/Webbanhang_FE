@@ -18,7 +18,7 @@ function menuUser() {
                     <img
                         src="https://storage.googleapis.com/hust-files/5807675312963584/images/hust-logo-official_.3m.jpeg"
                         alt="avatar"
-                        className={cx('user-avatar', 'me-1')}
+                        className={cx('user-avatar')}
                     />
                     User
                 </Link>

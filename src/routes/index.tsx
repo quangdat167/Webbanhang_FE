@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Home from '../pages/Home';
-import Phone from '../pages/Phone';
+import PhonePage from '../pages/Phone';
 import Authen from '../pages/Authen';
 import Cart from 'pages/Cart';
 
@@ -14,7 +14,8 @@ interface RouteConfig {
 // public routes
 const publicRoutes: RouteConfig[] = [
     { path: '/', component: Home },
-    { path: '/phone', component: Phone },
+    { path: '/phone', component: PhonePage },
+    { path: '/phones/:slug', component: PhonePage },
     { path: '/authen', component: Authen, layout: null },
     { path: '/cart', component: Cart },
 ];

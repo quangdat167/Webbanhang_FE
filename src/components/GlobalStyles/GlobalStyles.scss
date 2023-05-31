@@ -3,8 +3,16 @@
 :root {
     --primary: #d70018;
 }
+* {
+    margin: 0;
+    padding: 0;
+}
 
 body {
     font-weight: 400;
     line-height: 1.5;
+}
+
+a[href] {
+    text-decoration: none;
 }
