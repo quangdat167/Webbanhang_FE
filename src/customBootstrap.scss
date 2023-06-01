@@ -1,9 +1,15 @@
 // Override default variables before the import
 $dropdown-spacer: 0rem;
 
-@media (max-width: 540px) {
+@media (max-width: 576px) {
     html {
         font-size: 0.75rem !important;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    html {
+        font-size: 0.9rem !important;
     }
 }
 

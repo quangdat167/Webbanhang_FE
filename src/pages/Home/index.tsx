@@ -5,36 +5,15 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import * as getPhonesService from 'service/getPhonesService';
+import PhoneObject from 'models/PhoneModel';
 
 const cx = classNames.bind(styles);
-interface PriceObject {
-    type: string;
-    price: string;
-}
-
-interface ColorObject {
-    color: string;
-    img: string;
-}
-interface Phone {
-    _id: string;
-    brand: string;
-    name: string;
-    prices: PriceObject[];
-    specifications: string[];
-    images: string[];
-    promotion: String;
-    colors: ColorObject[];
-    createdAt: Date;
-    updatedAt: Date;
-    slug: string;
-}
 
 function Home() {
-    const [phones, setPhones] = useState<Phone[]>([]);
+    const [phones, setPhones] = useState<PhoneObject[]>([]);
     useEffect(() => {
         const getPhones = async () => {
-            const result: Phone[] = await getPhonesService.getAllPhones();
+            const result: PhoneObject[] = await getPhonesService.getAllPhones();
             if (result) setPhones(result);
         };
         getPhones();
@@ -42,8 +21,8 @@ function Home() {
 
     return (
         <Container className="mt-4">
-            <Row className="g-2 " sm={2} md={3} lg={4} xl={5}>
-                {phones.map((phone: Phone) => (
+            <Row className="g-2" xs={2} sm={2} md={3} lg={4} xl={5}>
+                {phones.map((phone: PhoneObject) => (
                     <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
                         <Card className="h-100 shadow rounded-4">
                             <div className="text-center">

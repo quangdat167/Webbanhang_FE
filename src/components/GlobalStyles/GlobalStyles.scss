@@ -16,3 +16,17 @@ body {
 a[href] {
     text-decoration: none;
 }
+
+.fs-12 {
+    font-size: 12px !important;
+}
+
+.hover-underline {
+    &:hover {
+        text-decoration: underline !important;
+    }
+}
+
+.min-height-200 {
+    min-height: 12.5rem !important;
+}
