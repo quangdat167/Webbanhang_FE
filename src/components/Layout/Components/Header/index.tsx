@@ -1,16 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Header.module.scss';
 import classnames from 'classnames/bind';
-import Cart from 'components/ButtonCart';
 
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import MenuUser from 'components/MenuUser';
-
+import Cart from 'components/ButtonCart/cart';
+import ButtonAuth from 'components/ButtonAuth/buttonAuth'
 const cx = classnames.bind(styles);
 
 function Header() {
+    const isLogin = false;
     return (
         <div>
             <nav className="navbar navbar-expand" style={{ backgroundColor: 'var(--primary)' }}>
@@ -36,9 +37,7 @@ function Header() {
                             <li>
                                 <Cart />
                             </li>
-                            <li>
-                                <MenuUser />
-                            </li>
+                            <li>{isLogin ? <MenuUser /> : <ButtonAuth />}</li>
                         </ul>
                     </div>
                 </div>

@@ -8,8 +8,8 @@ import * as getPhonesService from 'service/getPhonesService';
 import { Container, Row, Col, Carousel, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGift } from '@fortawesome/free-solid-svg-icons';
-import ButtonBuy from 'components/ButtonBuy';
-import ButtonAddToCart from 'components/ButtonAddToCart';
+import ButtonBuy from 'components/ButtonBuy/buttonBuy';
+import ButtonAddToCart from 'components/ButtonAddToCart/buttonAddToCard';
 import PhoneObject from 'models/PhoneModel';
 
 const cx = classNames.bind(styles);
