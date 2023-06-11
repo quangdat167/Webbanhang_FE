@@ -1,51 +1,94 @@
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRef, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import validator from 'validator';
+import * as authenService from 'service/authenService';
 
 function SignIn() {
     const stringEmtpy: string = 'Vui lòng nhập trường này';
+
+    const [loading, setLoading] = useState<Boolean>(false);
+
     const [username, setUsername] = useState<string>('');
-    const [isValidUsername, setIsValidUsername] = useState<Boolean>(true);
+    const [isBorderNoneUsername, setIsBorderNoneUsername] = useState<Boolean>(true);
+    const [isValidUsername, setIsValidUsername] = useState<Boolean>(false);
     const inputUsername = useRef<HTMLDivElement>(null);
 
     const [password, setPassword] = useState<string>('');
-    const [isValidPassword, setIsValidPassword] = useState<Boolean>(true);
+    const [isBorderNonePassword, setisBorderNonePassword] = useState<Boolean>(true);
+    const [isValidPassword, setIsValidPassword] = useState<Boolean>(false);
     const inputPassword = useRef<HTMLDivElement>(null);
     const [typePass, setTypePass] = useState<'password' | 'text'>('password');
+
+    const formRef = useRef<HTMLFormElement>(null);
 
     //Handle Check Valid Username
     const handleCheckValidUsername = () => {
         if (validator.isEmpty(username) === true) {
-            inputUsername.current!.append(stringEmtpy);
+            inputUsername.current!.innerText = stringEmtpy;
+            setIsBorderNoneUsername(false);
             setIsValidUsername(false);
-            return;
         }
     };
+    useEffect(() => {
+        if (username.length > 0) {
+            setIsValidUsername(true);
+        }
+    }, [username]);
     const handleFocusUsernameInput = () => {
         inputUsername.current!.innerHTML = '';
-        setIsValidUsername(true);
+        setIsBorderNoneUsername(true);
     };
 
     // Handle Check Valid Password
     const handleCheckValidPassword = () => {
         if (validator.isEmpty(password) === true) {
             inputPassword.current!.innerText = stringEmtpy;
+            setisBorderNonePassword(false);
             setIsValidPassword(false);
-            return;
         }
     };
+    useEffect(() => {
+        if (password.length > 0) {
+            setIsValidPassword(true);
+        }
+    }, [password]);
     const handleFocusPasswordInput = () => {
         inputPassword.current!.innerHTML = '';
-        setIsValidPassword(true);
+        setisBorderNonePassword(true);
+    };
+
+    const handleSubmitForm = async (e: React.FormEvent) => {
+        e.preventDefault();
+        handleCheckValidUsername();
+        handleCheckValidPassword();
+        if (isValidPassword && isValidUsername) {
+            setLoading(true);
+            // Gọi API xử lý đăng nhập
+            try {
+                const result = await authenService.signIn({
+                    username,
+                    password,
+                });
+                // Xử lý phản hồi từ server sau khi đăng nhập thành công
+                if (result) {
+                    console.log(result);
+                    // window.location.href = 'http://localhost:3000';
+                }
+                setLoading(false);
+            } catch (error: any) {
+                console.error(new Error(error.message)); // Xử lý lỗi khi đăng nhập không thành công
+                setLoading(false);
+            }
+        }
     };
 
     return (
         <div className="mx-auto mt-3 px-2" style={{ maxWidth: '43.75rem' }}>
             <h2 className="text-center">Đăng nhập</h2>
-            <Form className="mt-3 d-flex flex-column">
+            <Form className="mt-3 d-flex flex-column" ref={formRef} onSubmit={handleSubmitForm}>
                 <Form.Group className="mb-3" controlId="formBasicUserName">
                     <Form.Label>Tên người dùng</Form.Label>
                     <Form.Control
@@ -56,11 +99,11 @@ function SignIn() {
                         onChange={(e) => setUsername(e.target.value)}
                         onBlur={handleCheckValidUsername}
                         onFocus={handleFocusUsernameInput}
-                        className={`${isValidUsername ? '' : 'border-danger'}`}
+                        className={`${isBorderNoneUsername ? '' : 'border-danger'}`}
                     />
                     <Form.Text
                         ref={inputUsername}
-                        className={`${isValidUsername ? '' : 'text-danger'}`}
+                        className={`${isBorderNoneUsername ? '' : 'text-danger'}`}
                     ></Form.Text>
                 </Form.Group>
 
@@ -75,7 +118,7 @@ function SignIn() {
                             onChange={(e) => setPassword(e.target.value)}
                             onBlur={handleCheckValidPassword}
                             onFocus={handleFocusPasswordInput}
-                            className={`${isValidPassword ? '' : 'border-danger'}`}
+                            className={`${isBorderNonePassword ? '' : 'border-danger'}`}
                         />
                         {typePass === 'password' && (
                             <span onClick={() => setTypePass('text')}>
@@ -98,7 +141,7 @@ function SignIn() {
                     </div>
                     <Form.Text
                         ref={inputPassword}
-                        className={`${isValidPassword ? '' : 'text-danger'}`}
+                        className={`${isBorderNonePassword ? '' : 'text-danger'}`}
                     ></Form.Text>
                 </Form.Group>
 
@@ -107,7 +150,11 @@ function SignIn() {
                     variant="danger"
                     type="submit"
                 >
-                    Đăng nhập
+                    {loading ? (
+                        <Spinner animation="border" variant="light" className="fs-5" />
+                    ) : (
+                        <span>Đăng nhập</span>
+                    )}
                 </Button>
                 <div className="my-4 d-flex justify-content-center">
                     <p>Bạn chưa có tài khoản ?</p>
