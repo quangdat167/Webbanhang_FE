@@ -1,7 +1,7 @@
 import axios from 'axios';
-import UserModel from 'models/UserModel';
+import { userProps } from 'utils/interface';
 
-export const signUp = async (data: UserModel) => {
+export const signUp = async (data: userProps) => {
     try {
         const res = await axios.post('http://localhost:3010/api/sign-up', data);
         return res.data;
@@ -10,7 +10,7 @@ export const signUp = async (data: UserModel) => {
     }
 };
 
-export const signIn = async (data: UserModel) => {
+export const signIn = async (data: userProps) => {
     try {
         const res = await axios.post('http://localhost:3010/api/sign-in', data);
         return res.data;

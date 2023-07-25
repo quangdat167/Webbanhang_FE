@@ -4,25 +4,32 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import * as getPhonesService from 'service/getPhonesService';
-import PhoneObject from 'models/PhoneModel';
+import { phoneProps } from 'utils/interface';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import axios from 'axios';
+import Url from 'utils/url';
 
 const cx = classNames.bind(styles);
 
 function Home() {
-    const [phones, setPhones] = useState<PhoneObject[]>([]);
+    const [phones, setPhones] = useState<phoneProps[]>([]);
     useEffect(() => {
         const getPhones = async () => {
-            const result: PhoneObject[] = await getPhonesService.getAllPhones();
-            if (result) setPhones(result);
+            try {
+                const result = await axios.get(Url(`phones`));
+                setPhones(result.data);
+            } catch (error: any) {
+                console.log(error);
+                alert(error.response.data.message);
+            }
         };
         getPhones();
     }, []);
-
     return (
         <Container className="mt-4">
             <Row className="g-2" xs={2} sm={2} md={3} lg={4} xl={5}>
-                {phones.map((phone: PhoneObject) => (
+                {phones.map((phone: phoneProps) => (
                     <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
                         <Card className="h-100 shadow rounded-4">
                             <div className="text-center">
@@ -59,18 +66,23 @@ function Home() {
                                         {phone.prices[phone.prices.length - 1].price}
                                     </Card.Text>
                                     <p
-                                        className="p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
+                                        className="mb-5 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
                                         style={{ color: '#444' }}
                                     >
                                         {phone.promotion}
                                     </p>
                                 </Card.Body>
                             </Link>
-                            <Card.Footer className=" text-center">
+
+                            <div className="position-absolute end-5 bottom-3 v-center text-dark">
+                                <small className="me-1">Yêu thích</small>
+                                <FontAwesomeIcon className="text-danger" size="lg" icon={faHeart} />
+                            </div>
+                            {/* <Card.Footer className=" text-center">
                                 <Link to={`/phones/${phone._id}/edit`} className="btn btn-primary ">
                                     Thêm vào giỏ hàng
                                 </Link>
-                            </Card.Footer>
+                            </Card.Footer> */}
                         </Card>
                     </Col>
                 ))}

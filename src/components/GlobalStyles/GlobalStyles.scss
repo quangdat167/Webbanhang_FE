@@ -3,6 +3,7 @@
 :root {
     --primary: #d70018;
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,10 @@
 body {
     font-weight: 400;
     line-height: 1.5;
+}
+
+.text-root {
+    color: var(--primary);
 }
 
 a[href] {
@@ -23,6 +28,7 @@ a[href] {
 
 .hover-underline {
     &:hover {
+        cursor: pointer;
         text-decoration: underline !important;
     }
 }
@@ -44,4 +50,20 @@ a[href] {
     &:hover {
         background: hsla(0, 0%, 100%, 0.2);
     }
+}
+
+.v-center {
+    display: flex;
+    align-items: center;
+}
+
+.h-center {
+    display: flex;
+    justify-content: center;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -4,29 +4,34 @@ import classNames from 'classnames/bind';
 
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import * as getPhonesService from 'service/getPhonesService';
 import { Container, Row, Col, Carousel, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGift } from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus, faGift } from '@fortawesome/free-solid-svg-icons';
 import ButtonBuy from 'components/ButtonBuy/buttonBuy';
-import ButtonAddToCart from 'components/ButtonAddToCart/buttonAddToCard';
-import PhoneObject from 'models/PhoneModel';
+import { PriceObject, cartProps, colorProps, phoneProps } from 'utils/interface';
+import axios from 'axios';
+import Url from 'utils/url';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from 'pages/Cart/CartSlice';
+import { RootState } from 'redux/store';
 
 const cx = classNames.bind(styles);
 
 function PhonePage() {
-    const [phone, setPhone] = useState<PhoneObject | null>(null);
+    const carts = useSelector((state: RootState) => state.cart);
+    const dispatch = useDispatch();
+    const [phone, setPhone] = useState<phoneProps | null>(null);
     const { slug } = useParams<{ slug: string }>();
     const [indexCarousel, setIndexCarousel] = useState<number>(0);
-    const [phonePrice, setPhonePrice] = useState<string>();
-    const [phoneColor, setPhoneColor] = useState<string>();
+    const [phonePrice, setPhonePrice] = useState<PriceObject>({} as PriceObject);
+    const [phoneColor, setPhoneColor] = useState<colorProps>({} as colorProps);
 
     useEffect(() => {
         const fetchPhone = async () => {
             try {
                 if (slug) {
-                    const result: PhoneObject = await getPhonesService.getPhone(slug);
-                    setPhone(result);
+                    const result = await axios.get(Url(`phones/${slug}`));
+                    setPhone(result.data);
                 }
             } catch (error) {
                 console.log(error);
@@ -34,12 +39,17 @@ function PhonePage() {
         };
         fetchPhone();
     }, [slug]);
+
     useEffect(() => {
         if (phone) {
-            setPhonePrice(phone.prices[phone.prices.length - 1].price);
-            setPhoneColor(phone.colors[0].color);
+            setPhonePrice(phone.prices[phone.prices.length - 1]);
+            setPhoneColor(phone.colors[0]);
         }
     }, [phone]);
+
+    useEffect(() => {
+        localStorage.setItem('carts', JSON.stringify(carts));
+    }, [carts]);
 
     const handleSelectCarousel = (selectedIndex: number) => {
         setIndexCarousel(selectedIndex);
@@ -48,6 +58,22 @@ function PhonePage() {
     if (!phone) {
         return <h2>Loading...</h2>;
     }
+
+    // Thêm vào giỏ hàng
+    const handleAddToCart = () => {
+        const phoneAddToCart: cartProps = {
+            _id: phone._id,
+            name: phone.name,
+            type: phonePrice.type,
+            image: phoneColor?.img!,
+            price: phonePrice.price,
+            color: phoneColor.color,
+            promotion: phone.promotion,
+            url: `/phones/${phone.slug}`,
+            quantity: 1,
+        };
+        dispatch(addToCart(phoneAddToCart));
+    };
 
     return (
         <Container style={{ maxWidth: 1200 }} className="mt-4">
@@ -112,7 +138,7 @@ function PhonePage() {
 
                 {/* {{! Cột bên phải }} */}
                 <Col md={7} lg={5} className="h-100">
-                    <p className="card-text text-danger fs-5 fw-bold">{phonePrice}</p>
+                    <p className="card-text text-danger fs-5 fw-bold">{phonePrice.price}</p>
 
                     {/* {{! Khung chọn loại bộ nhớ }} */}
                     <div className="options-price">
@@ -120,11 +146,11 @@ function PhonePage() {
                             <Button
                                 key={index}
                                 onClick={() => {
-                                    setPhonePrice(price.price);
+                                    setPhonePrice(price);
                                 }}
                                 variant="outline-light"
                                 className={`fs-12 px-2 py-2 mb-2 me-2 border text-dark ${
-                                    phonePrice === price.price
+                                    phonePrice.price === price.price
                                         ? 'border-danger'
                                         : 'border-dark-subtle'
                                 }
@@ -144,13 +170,13 @@ function PhonePage() {
                         {phone.colors.map((color, index) => (
                             <Button
                                 key={index}
-                                onClick={() => setPhoneColor(color.color)}
+                                onClick={() => setPhoneColor(color)}
                                 variant="outline-light"
                                 className={cx(
                                     'fs-12',
                                     'px-1 py-2 mb-2 me-2 btn border text-dark',
                                     `${
-                                        phoneColor === color.color
+                                        phoneColor?.color === color.color
                                             ? 'border-danger'
                                             : 'border-dark-subtle'
                                     }`,
@@ -185,7 +211,15 @@ function PhonePage() {
                                 <ButtonBuy />
                             </Col>
                             <Col xs={4}>
-                                <ButtonAddToCart />
+                                <Button
+                                    variant="outline-danger"
+                                    className=" w-100 h-100 d-flex flex-column align-items-center "
+                                    onClick={handleAddToCart}
+                                >
+                                    <FontAwesomeIcon className="mt-1 fs-5" icon={faCartPlus} />
+
+                                    <p className="mt-1 fs-12 mb-0"> Thêm vào giỏ</p>
+                                </Button>
                             </Col>
                         </Row>
                     </div>
