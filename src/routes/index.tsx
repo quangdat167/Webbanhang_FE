@@ -6,14 +6,14 @@ import PhonePage from 'pages/Phone';
 import Cart from 'pages/Cart';
 import SignIn from 'pages/SignIn';
 import SignUp from 'pages/SignUp';
+import RouteConfig from './Route';
 
-interface RouteConfig {
+interface RouterConfig {
     path: string;
     component: React.ComponentType;
-    layout?: React.ComponentType | null;
+    layout: React.ComponentType;
 }
 
-// public routes
 const publicRoutes: RouteConfig[] = [
     { path: '/', component: Home },
     { path: '/phone', component: PhonePage },
@@ -22,7 +22,5 @@ const publicRoutes: RouteConfig[] = [
     { path: '/sign-in', component: SignIn, layout: HeaderOnly },
     { path: '/cart', component: Cart },
 ];
-
-const privateRoutes: RouteConfig[] = [];
-
+const privateRoutes: RouterConfig[] = [];
 export { publicRoutes, privateRoutes };
