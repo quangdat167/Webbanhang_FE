@@ -1,14 +1,13 @@
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { auth } from '../../firebaseConfig/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
-import { Link, Navigate } from 'react-router-dom';
-import validator from 'validator';
 import { useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
 import { RootState } from 'redux/store';
 import RouteConfig from 'routes/Route';
+import Config from 'utils/Config';
+import validator from 'validator';
+import { auth } from '../../firebaseConfig/firebase';
 
 function SignIn() {
     const userInfo = useSelector((state: RootState) => state.userInfoState);
@@ -83,7 +82,7 @@ function SignIn() {
             try {
                 await signInWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
-                        const user = userCredential.user;
+                        // const user = userCredential.user;
                     })
                     .catch((error) => {
                         alert('Sign in failed');
@@ -163,7 +162,11 @@ function SignIn() {
             </Form>
         </div>
     ) : (
-        <Navigate to={RouteConfig.HOME} />
+        <Navigate
+            to={
+                userInfo.role === Config.USER_ROLE_ADMIN ? RouteConfig.ADMIN_HOME : RouteConfig.HOME
+            }
+        />
     );
 }
 

@@ -1,43 +1,54 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import styles from './Header.module.scss';
 import classnames from 'classnames/bind';
+import styles from './Header.module.scss';
 
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import MenuUser from 'components/MenuUser';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
+import Paper from '@mui/material/Paper';
+import ButtonAuth from 'components/ButtonAuth/buttonAuth';
 import Cart from 'components/ButtonCart/cart';
-import ButtonAuth from 'components/ButtonAuth/buttonAuth'
-const cx = classnames.bind(styles);
+import MenuUser from 'components/MenuUser';
+import MenuSearchResult from 'components/menu-search-result';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { RootState } from 'redux/store';
+import './styles.scss';
+import InputSearchPhone from 'components/input-search-phone';
+import Config from 'utils/Config';
+import RouteConfig from 'routes/Route';
 
+const cx = classnames.bind(styles);
 function Header() {
-    const isLogin = false;
+    const userInfo = useSelector((state: RootState) => state.userInfoState);
     return (
-        <div>
+        <div className="header-wrapper">
             <nav className="navbar navbar-expand" style={{ backgroundColor: 'var(--primary)' }}>
                 <div className={cx('container-1200', 'container flex-nowrap')}>
-                    <Link className="navbar-brand text-light" to="/">
+                    <Link
+                        className="navbar-brand text-light"
+                        to={
+                            userInfo.role === Config.USER_ROLE_ADMIN
+                                ? RouteConfig.ADMIN_HOME
+                                : RouteConfig.HOME
+                        }
+                    >
                         Quang Đạt
                     </Link>
 
-                    <form className="d-flex" role="search">
-                        <input
-                            className="form-control me-1"
-                            type="search"
-                            placeholder="Tìm kiếm điện thoại"
-                            aria-label="Search"
-                        />
-                        <button className="btn btn-outline-light d-none d-sm-block" type="submit">
-                            <FontAwesomeIcon className="fs-5" icon={faMagnifyingGlass} />
-                        </button>
-                    </form>
+                    <InputSearchPhone />
 
                     <div className="" id="">
                         <ul className="navbar-nav ms-auto align-items-center">
-                            <li>
-                                <Cart />
-                            </li>
-                            <li>{isLogin ? <MenuUser /> : <ButtonAuth />}</li>
+                            {userInfo.role !== Config.USER_ROLE_ADMIN ? (
+                                <li>
+                                    <Cart />
+                                </li>
+                            ) : (
+                                <></>
+                            )}
+                            <li>{userInfo?.email ? <MenuUser /> : <ButtonAuth />}</li>
                         </ul>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <div>
             <Header />
-            <Container fluid style={{ minHeight: 600 }}>
+            <Container fluid style={{ minHeight: 600, marginTop: 80 }}>
                 {children}
             </Container>
             <Footer />

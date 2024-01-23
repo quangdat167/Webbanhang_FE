@@ -1,0 +1,79 @@
+.header-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+
+    .search-wrapper {
+        position: relative;
+
+        .menu-search-result {
+            margin-top: 12px;
+            background-color: #fff;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            min-height: 160px;
+            z-index: 100;
+            box-shadow: 4px inset #000;
+            border-radius: 8px;
+
+            .item-phone-search {
+                border-radius: 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                height: 80px;
+
+                &:hover {
+                    background-color: aliceblue;
+                }
+
+                .image-preview {
+                    width: 60px;
+                    height: 60px;
+                }
+
+                .main-content {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    .name {
+                        font-size: 12px;
+                        font-weight: 600;
+                    }
+
+                    .price {
+                        color: var(--primary);
+                        font-size: 14px;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .recoment-wrapper {
+                padding: 8px;
+                .recoment-title {
+                    color: #4a4a4a;
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 1.5;
+                }
+            }
+        }
+
+        .header-overlay {
+            background: rgba(0, 0, 0, 0.53);
+            height: 100vh;
+            left: 0;
+            position: fixed;
+            top: 64px;
+            transition: 0.3s;
+            width: 100%;
+            z-index: 30;
+        }
+    }
+}

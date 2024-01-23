@@ -1,5 +1,6 @@
-import APIConfig from "utils/APIConfig";
-import { POST } from "utils/url";
+import APIConfig from 'utils/APIConfig';
+import Config from 'utils/Config';
+import { POST } from 'utils/url';
 
 export const loginApi = ({
     firstName,
@@ -19,6 +20,7 @@ export const loginApi = ({
             lastName,
             password,
             email,
+            role: Config.USER_ROLE_MEMBER,
         },
     }).then((data: any) => {
         return data;
@@ -42,6 +44,15 @@ export const searchUserByEmail = ({ email }: { email: string }) => {
         params: {
             email,
         },
+    }).then((data: any) => {
+        return data;
+    });
+};
+
+export const changUserInfoApi = (args: { userId: string; phone?: string; address?: string }) => {
+    return POST({
+        url: APIConfig.UPDATE_USER_INFO,
+        params: args,
     }).then((data: any) => {
         return data;
     });

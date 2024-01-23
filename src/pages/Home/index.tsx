@@ -1,35 +1,31 @@
-import styles from './Home.module.scss';
 import classNames from 'classnames/bind';
+import styles from './Home.module.scss';
 
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, Col, Container, Row } from 'react-bootstrap';
-import { phoneProps } from 'utils/interface';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import axios from 'axios';
-import Url from 'utils/url';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { getAllPhonesApi } from 'service/phone.service';
+import { IPhone } from 'utils/interface';
+import { getMinPrice } from 'utils';
+// import Url from 'utils/url';
 
 const cx = classNames.bind(styles);
 
 function Home() {
-    const [phones, setPhones] = useState<phoneProps[]>([]);
+    const [phones, setPhones] = useState<IPhone[]>([]);
     useEffect(() => {
         const getPhones = async () => {
-            try {
-                const result = await axios.get(Url(`phones`));
-                setPhones(result.data);
-            } catch (error: any) {
-                console.log(error);
-                alert(error.response.data.message);
-            }
+            const result = await getAllPhonesApi();
+            setPhones(result);
         };
         getPhones();
     }, []);
     return (
         <Container className="mt-4">
             <Row className="g-2" xs={2} sm={2} md={3} lg={4} xl={5}>
-                {phones.map((phone: phoneProps) => (
+                {phones.map((phone: IPhone) => (
                     <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
                         <Card className="h-100 shadow rounded-4">
                             <div className="text-center">
@@ -63,7 +59,7 @@ function Home() {
                                         ))}
                                     </div>
                                     <Card.Text className="mt-2 text-danger fs-5 fw-bold">
-                                        {phone.prices[phone.prices.length - 1].price}
+                                        {getMinPrice(phone)}
                                     </Card.Text>
                                     <p
                                         className="mb-5 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"

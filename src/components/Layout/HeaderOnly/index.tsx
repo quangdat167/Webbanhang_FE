@@ -9,7 +9,9 @@ function HeaderOnly({ children }: HeaderOnlyProps) {
     return (
         <div>
             <Header />
-            <Container fluid>{children}</Container>
+            <Container style={{ marginTop: 80 }} fluid>
+                {children}
+            </Container>
         </div>
     );
 }

@@ -1,0 +1,9 @@
+.cart-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .cart-content-wrapper {
+        flex-grow: 1;
+    }
+}

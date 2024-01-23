@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from '../pages/Cart/CartSlice';
 import { UserInfoReducer } from './reducer/userinfo';
+import { snackbarReducer } from './reducer/snackbar';
+import { OrderReducer } from './reducer/order';
+import { compareReducer } from './reducer/compare';
 
 const store = configureStore({
     reducer: {
         userInfoState: UserInfoReducer,
         cart: cartReducer,
+        snackbarState: snackbarReducer,
+        orderState: OrderReducer,
+        compareState: compareReducer,
     },
 });
 

@@ -1,40 +1,47 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import styles from './Phone.module.scss';
 import classNames from 'classnames/bind';
+import styles from './Phone.module.scss';
 
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Container, Row, Col, Carousel, Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus, faGift } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonBuy from 'components/ButtonBuy/buttonBuy';
-import { PriceObject, cartProps, colorProps, phoneProps } from 'utils/interface';
-import axios from 'axios';
-import Url from 'utils/url';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom';
+import { ICartItem, IPhone, IPrices, IColors } from 'utils/interface';
+// import Url from 'utils/url';
 import { addToCart } from 'pages/Cart/CartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/store';
+import { getPhoneApi } from 'service/phone.service';
+import { formatNumberWithCommas } from 'utils';
+import { addToCartApi } from 'service/cart.service';
+import ComparePhone from 'components/compare-phone';
+import { changeComparePhone1, openCompare } from 'redux/reducer/compare';
 
 const cx = classNames.bind(styles);
 
 function PhonePage() {
+    const userInfo = useSelector((state: RootState) => state.userInfoState);
+    const compareState = useSelector((state: RootState) => state.compareState);
+
     const carts = useSelector((state: RootState) => state.cart);
     const dispatch = useDispatch();
-    const [phone, setPhone] = useState<phoneProps | null>(null);
+    const [phone, setPhone] = useState<IPhone | null>(null);
     const { slug } = useParams<{ slug: string }>();
     const [indexCarousel, setIndexCarousel] = useState<number>(0);
-    const [phonePrice, setPhonePrice] = useState<PriceObject>({} as PriceObject);
-    const [phoneColor, setPhoneColor] = useState<colorProps>({} as colorProps);
+    const [phonePrice, setPhonePrice] = useState<IPrices>({} as IPrices);
+    const [phoneColor, setPhoneColor] = useState<IColors>({} as IColors);
 
     useEffect(() => {
         const fetchPhone = async () => {
-            try {
-                if (slug) {
-                    const result = await axios.get(Url(`phones/${slug}`));
-                    setPhone(result.data);
-                }
-            } catch (error) {
-                console.log(error);
+            if (slug) {
+                console.log('slug', slug);
+
+                const result = await getPhoneApi({ slug: slug });
+                console.log('result: ' + result);
+
+                setPhone(result);
             }
         };
         fetchPhone();
@@ -60,28 +67,45 @@ function PhonePage() {
     }
 
     // Thêm vào giỏ hàng
-    const handleAddToCart = () => {
-        const phoneAddToCart: cartProps = {
-            _id: phone._id,
-            name: phone.name,
-            type: phonePrice.type,
-            image: phoneColor?.img!,
-            price: phonePrice.price,
-            color: phoneColor.color,
-            promotion: phone.promotion,
-            url: `/phones/${phone.slug}`,
-            quantity: 1,
-        };
-        dispatch(addToCart(phoneAddToCart));
+    const handleAddToCart = async () => {
+        // const phoneAddToCart: ICartItem = {
+        //     _id: phone._id,
+        //     name: phone.name,
+        //     type: phonePrice.type,
+        //     image: phoneColor?.img!,
+        //     price: phonePrice.price,
+        //     color: phoneColor.color,
+        //     promotion: phone.promotion,
+        //     url: `/phones/${phone.slug}`,
+        //     quantity: 1,
+        // };
+        if (userInfo.email) {
+            await addToCartApi({
+                userId: userInfo._id,
+                phoneId: phone._id,
+                color: phoneColor.color,
+                quantity: 1,
+                type: phonePrice.type,
+            });
+        }
+        // dispatch(addToCart(phoneAddToCart));
+    };
+
+    const handleAddPhoneToCompare = () => {
+        dispatch(openCompare(true));
+        dispatch(changeComparePhone1(phone));
     };
 
     return (
         <Container style={{ maxWidth: 1200 }} className="mt-4">
-            <div className="d-flex">
+            <div className="d-flex gap-2">
                 <h4 className="fw-700">{phone.name}</h4>
-                <Link to="/" className="ms-auto">
+                {/* <Link to="/" className="ms-auto">
                     Tất cả điện thoại
-                </Link>
+                </Link> */}
+                <Button variant="outline-danger" onClick={handleAddPhoneToCompare}>
+                    + So sánh
+                </Button>
             </div>
             <hr />
 
@@ -138,7 +162,9 @@ function PhonePage() {
 
                 {/* {{! Cột bên phải }} */}
                 <Col md={7} lg={5} className="h-100">
-                    <p className="card-text text-danger fs-5 fw-bold">{phonePrice.price}</p>
+                    <p className="card-text text-danger fs-5 fw-bold">
+                        {formatNumberWithCommas(phonePrice.price)}
+                    </p>
 
                     {/* {{! Khung chọn loại bộ nhớ }} */}
                     <div className="options-price">
@@ -159,7 +185,7 @@ function PhonePage() {
                             >
                                 <span className="fw-medium">{price.type}</span>
                                 <br />
-                                {price.price}
+                                {formatNumberWithCommas(price.price)}
                             </Button>
                         ))}
                     </div>
@@ -225,6 +251,7 @@ function PhonePage() {
                     </div>
                 </Col>
             </Row>
+            {compareState.open && <ComparePhone />}
         </Container>
     );
 }

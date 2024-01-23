@@ -12,6 +12,7 @@ import { loginApi } from 'service/authen.service';
 import validator from 'validator';
 import { RootState } from 'redux/store';
 import RouteConfig from 'routes/Route';
+import Config from 'utils/Config';
 
 function SignUp() {
     const dispatch = useDispatch();
@@ -187,16 +188,17 @@ function SignUp() {
             // Gọi API xử lý đăng ký
 
             await createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
                     // Signed up
                     // let user = userCredential.user;
-                    let user = loginApi({
+                    let user = await loginApi({
                         firstName,
                         lastName,
                         password,
                         email,
                     });
                     dispatch(loginReducer(user));
+                    window.location.reload();
                 })
                 .catch((error) => {
                     alert('Sign up failed');
@@ -316,7 +318,11 @@ function SignUp() {
             </Form>
         </div>
     ) : (
-        <Navigate to={RouteConfig.HOME} />
+        <Navigate
+            to={
+                userInfo.role === Config.USER_ROLE_ADMIN ? RouteConfig.ADMIN_HOME : RouteConfig.HOME
+            }
+        />
     );
 }
 
