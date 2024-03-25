@@ -30,18 +30,20 @@ function Home() {
                         <Card className="h-100 shadow rounded-4">
                             <div className="text-center">
                                 <Link to={`/phones/${phone.slug}`}>
-                                    <Card.Img
-                                        src={phone.images[0]}
-                                        className={cx('card-img-top')}
-                                        alt={phone.name}
-                                    />
+                                    {phone.colors[0]?.img && (
+                                        <Card.Img
+                                            src={phone?.colors[0]?.img}
+                                            className={cx('card-img-top')}
+                                            alt={phone.name}
+                                        />
+                                    )}
                                 </Link>
                             </div>
                             <Link to={`/phones/${phone.slug}`}>
                                 <Card.Body style={{ minHeight: '18rem' }}>
                                     <Card.Title
                                         className="fs-6 fw-bold"
-                                        style={{ height: '4rem', color: '#444' }}
+                                        style={{ height: '3rem', color: '#444' }}
                                     >
                                         {phone.name}
                                     </Card.Title>
@@ -61,12 +63,14 @@ function Home() {
                                     <Card.Text className="mt-2 text-danger fs-5 fw-bold">
                                         {getMinPrice(phone)}
                                     </Card.Text>
-                                    <p
-                                        className="mb-5 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
-                                        style={{ color: '#444' }}
-                                    >
-                                        {phone.promotion}
-                                    </p>
+                                    {phone.promotion?.length && (
+                                        <p
+                                            className="mb-5 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
+                                            style={{ color: '#444' }}
+                                        >
+                                            {phone.promotion[0]}
+                                        </p>
+                                    )}
                                 </Card.Body>
                             </Link>
 

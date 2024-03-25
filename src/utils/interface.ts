@@ -10,6 +10,16 @@ export interface IColors {
     img: string;
 }
 
+export interface DetailOfTechnicalInfo {
+    title: string;
+    infos: string[];
+}
+
+export interface ITechnicalInfos {
+    name: string;
+    details: DetailOfTechnicalInfo[];
+}
+
 export interface IPhone {
     _id: string;
     brand: string;
@@ -18,27 +28,14 @@ export interface IPhone {
     specifications: string[];
     description: string[];
     images: string[];
-    promotion: string;
+    promotion: string[];
     colors: IColors[];
     createdAt: Date;
     updatedAt: Date;
     slug: string;
-    batery: string;
-    bluetooth: string;
-    charging_port: string;
-    chipset: string;
-    cpu: string;
-    display_type: string;
-    gpu: string;
-    memory_card: string;
-    nfc: string;
-    operating_system: string;
-    scanning_frequency: string;
-    screen_technology: string;
-    sim: string;
-    size: string;
-    time_release: string;
-    weight: string;
+    information: string;
+    priority: number;
+    technical_infos: ITechnicalInfos[];
 }
 
 export interface IProduct {

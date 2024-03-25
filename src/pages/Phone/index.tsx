@@ -1,25 +1,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import classNames from 'classnames/bind';
-import styles from './Phone.module.scss';
 
-import { faCartPlus, faGift } from '@fortawesome/free-solid-svg-icons';
+import { faCaretRight, faCartPlus, faGift } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ButtonBuy from 'components/ButtonBuy/buttonBuy';
 import { useEffect, useState } from 'react';
 import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
-import { ICartItem, IPhone, IPrices, IColors } from 'utils/interface';
-// import Url from 'utils/url';
-import { addToCart } from 'pages/Cart/CartSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/store';
-import { getPhoneApi } from 'service/phone.service';
-import { formatNumberWithCommas } from 'utils';
-import { addToCartApi } from 'service/cart.service';
+import { useParams } from 'react-router-dom';
+import { IColors, IPhone, IPrices } from 'utils/interface';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ComparePhone from 'components/compare-phone';
+import DialogTechnicalPhone from 'components/dialog-technical';
+import TechnicalCommon from 'components/technical-common';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeComparePhone1, openCompare } from 'redux/reducer/compare';
-
-const cx = classNames.bind(styles);
+import { RootState } from 'redux/store';
+import { addToCartApi } from 'service/cart.service';
+import { getPhoneApi } from 'service/phone.service';
+import { formatNumberWithCommas, scrollToTop } from 'utils';
+import './style.scss';
 
 function PhonePage() {
     const userInfo = useSelector((state: RootState) => state.userInfoState);
@@ -32,14 +30,16 @@ function PhonePage() {
     const [indexCarousel, setIndexCarousel] = useState<number>(0);
     const [phonePrice, setPhonePrice] = useState<IPrices>({} as IPrices);
     const [phoneColor, setPhoneColor] = useState<IColors>({} as IColors);
+    const [openDialogTechnical, setOpenDialogTechnical] = useState(false);
+
+    useEffect(() => {
+        scrollToTop();
+    }, []);
 
     useEffect(() => {
         const fetchPhone = async () => {
             if (slug) {
-                console.log('slug', slug);
-
                 const result = await getPhoneApi({ slug: slug });
-                console.log('result: ' + result);
 
                 setPhone(result);
             }
@@ -97,12 +97,12 @@ function PhonePage() {
     };
 
     return (
-        <Container style={{ maxWidth: 1200 }} className="mt-4">
+        <Container style={{ maxWidth: 1200 }} className="phone-page mt-4">
             <div className="d-flex gap-2">
                 <h4 className="fw-700">{phone.name}</h4>
                 {/* <Link to="/" className="ms-auto">
-                    Tất cả điện thoại
-                </Link> */}
+                        Tất cả điện thoại
+                    </Link> */}
                 <Button variant="outline-danger" onClick={handleAddPhoneToCompare}>
                     + So sánh
                 </Button>
@@ -119,30 +119,28 @@ function PhonePage() {
                     >
                         {phone.images.map((img, index) => (
                             <Carousel.Item key={index}>
-                                <img className="d-block w-50 mx-auto" src={img} alt={img} />
-                                {/* <div className="carousel-image w-100 overflow-x-auto mb-4">
-                                    <img
-                                        src={img}
-                                        alt={img}
-                                        data-bs-slide-to={index}
-                                        className={cx('image-swipe', 'border rounded-3')}
-                                    />
-                                </div> */}
+                                <img
+                                    className="d-block mx-auto"
+                                    height={400}
+                                    style={{ objectFit: 'contain', maxWidth: '100%' }}
+                                    src={img}
+                                    alt={img}
+                                />
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <div className={cx('list-image-swipe', ' mt-2 mb-1 w-100  overflow-x-auto ')}>
+                    <div className={'list-image-swipe mt-2 mb-1 w-100  overflow-x-auto '}>
                         {phone.images.map((img, index) => (
                             <img
                                 key={index}
                                 src={img}
                                 alt={img}
                                 onClick={() => setIndexCarousel(index)}
-                                className={cx(
-                                    'image-swipe',
-                                    'border rounded-3',
-                                    `${indexCarousel === index ? 'border-danger' : ''}`,
-                                )}
+                                className={
+                                    'image-swipe ' +
+                                    ' border rounded-3 ' +
+                                    `${indexCarousel === index ? 'border-danger' : ''}`
+                                }
                             />
                         ))}
                     </div>
@@ -180,7 +178,7 @@ function PhonePage() {
                                         ? 'border-danger'
                                         : 'border-dark-subtle'
                                 }
-                                 `}
+                                     `}
                                 style={{ width: 'calc(33.33333% - 0.7rem)' }}
                             >
                                 <span className="fw-medium">{price.type}</span>
@@ -198,19 +196,18 @@ function PhonePage() {
                                 key={index}
                                 onClick={() => setPhoneColor(color)}
                                 variant="outline-light"
-                                className={cx(
-                                    'fs-12',
-                                    'px-1 py-2 mb-2 me-2 btn border text-dark',
+                                className={
+                                    'fs-12 px-1 py-2 mb-2 me-2 btn border text-dark ' +
                                     `${
                                         phoneColor?.color === color.color
                                             ? 'border-danger'
                                             : 'border-dark-subtle'
-                                    }`,
-                                )}
+                                    }`
+                                }
                                 style={{ width: 'calc(33.33333% - 0.7rem)' }}
                             >
                                 <img src={color.img} alt={color.color} style={{ width: '2rem' }} />
-                                <span className="fw-semibold">{color.color}</span>
+                                <span className="ms-2 fw-semibold">{color.color}</span>
                             </Button>
                         ))}
                     </div>
@@ -221,13 +218,25 @@ function PhonePage() {
                             <FontAwesomeIcon icon={faGift} style={{ color: '#d70018' }} />
                             <span className="ms-2">Khuyến mãi</span>
                         </div>
-                        <a
-                            href="#"
-                            type="button"
-                            className={cx('hover-underline', 'p-3 small text-body')}
-                        >
-                            {phone.promotion}
-                        </a>
+                        <div className="p-2">
+                            {phone.promotion.map((promotion, i) => (
+                                <a
+                                    key={i}
+                                    href="#"
+                                    type="button"
+                                    className={
+                                        'hover-underline ' +
+                                        'pb-2 small text-body d-flex align-items-start gap-2'
+                                    }
+                                >
+                                    <CheckCircleIcon
+                                        color="success"
+                                        style={{ width: 16, height: 16, marginTop: 2 }}
+                                    />
+                                    <div> {promotion}</div>
+                                </a>
+                            ))}
+                        </div>
                     </div>
 
                     {/* {{! Button buy, add to cart }} */}
@@ -249,9 +258,30 @@ function PhonePage() {
                             </Col>
                         </Row>
                     </div>
+                    <div className="mt-4 d-flex flex-column ">
+                        <div className="fs-4 fw-medium">Cấu hình Điện thoại {phone.name}</div>
+                        <div className="mt-2">
+                            <TechnicalCommon phone={phone} />
+                        </div>
+                        <Button
+                            variant="outline-primary"
+                            className="button-details mx-5 my-3 px-4 py-2 center gap-3"
+                            onClick={() => {
+                                setOpenDialogTechnical(true);
+                            }}
+                        >
+                            <p className="mb-0 fs-7">Xem thêm cấu hình chi tiết</p>
+                            <FontAwesomeIcon className="mt-1 fs-5" icon={faCaretRight} />
+                        </Button>
+                    </div>
                 </Col>
             </Row>
             {compareState.open && <ComparePhone />}
+            <DialogTechnicalPhone
+                phone={phone}
+                open={openDialogTechnical}
+                setOpen={setOpenDialogTechnical}
+            />
         </Container>
     );
 }
