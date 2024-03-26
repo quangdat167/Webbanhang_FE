@@ -85,42 +85,42 @@ export default function DialogTechnicalPhone({
                     </IconButton>
                     <DialogContent dividers>
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: '800px' }} aria-label="customized table">
+                            <Table
+                                stickyHeader
+                                sx={{ minWidth: '700px' }}
+                                aria-label="customized table"
+                            >
                                 <TableHead>
                                     <StyledTableCell align="center" colSpan={2} className="fs-4">
                                         {phone.name}
                                     </StyledTableCell>
                                 </TableHead>
                                 <TableBody>
-                                    {phone.technical_infos.map((info, i) => (
+                                    {phone.technical_infos?.map((info, i) => (
                                         <>
-                                            {/* <div className="m-2 fw-medium">{info.name}</div> */}
                                             <StyledTableRow key={i}>
                                                 <StyledTableCell
                                                     colSpan={2}
-                                                    // component="th"
-                                                    // scope="row"
                                                     className="header fs-5 fw-medium px-2"
                                                 >
                                                     {info.name}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                             {info.details.map((detail, index) => (
-                                                <StyledTableRow key={index}>
-                                                    <StyledTableCell component="th" scope="row">
+                                                <StyledTableRow key={i + index}>
+                                                    <StyledTableCell width={'30%'}>
                                                         {detail.title}
                                                     </StyledTableCell>
                                                     <StyledTableCell align="left">
-                                                        {detail.infos.map((info) => {
-                                                            if (detail.infos.length > 1) {
-                                                                return (
-                                                                    <ul className="px-3 mb-2">
-                                                                        <li>{info}</li>
-                                                                    </ul>
-                                                                );
-                                                            }
-                                                            return info;
-                                                        })}
+                                                        {detail.infos.length > 1 ? (
+                                                            <ul className="px-3 mb-0">
+                                                                {detail.infos.map((info, i) => (
+                                                                    <li key={i}>{info}</li>
+                                                                ))}
+                                                            </ul>
+                                                        ) : (
+                                                            <>{detail.infos[0]}</>
+                                                        )}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             ))}

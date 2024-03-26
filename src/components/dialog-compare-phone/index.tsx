@@ -13,10 +13,10 @@ import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPhonesApi } from 'service/phone.service';
+import { RootState } from 'redux/store';
+import { getInfosByTitle } from 'utils';
 import { IPhone } from 'utils/interface';
 import './style.scss';
-import { RootState } from 'redux/store';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -29,12 +29,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
+    // '&:nth-of-type(odd)': {
+    //     backgroundColor: theme.palette.action.hover,
+    // },
     // hide last border
     '&:last-child td, &:last-child th': {
         border: 0,
+    },
+    '.header': {
+        backgroundColor: theme.palette.action.hover,
     },
 }));
 
@@ -66,11 +69,8 @@ export default function DialogComparePhone({
     open: boolean;
     setOpen: Function;
 }) {
-    const dispatch = useDispatch();
     const compareState = useSelector((state: RootState) => state.compareState);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -84,46 +84,6 @@ export default function DialogComparePhone({
             setPhone2(compareState.phone2);
         }
     }, [compareState]);
-
-    const [rows, setRows] = useState<any>([]);
-
-    useEffect(() => {
-        if (phone1?._id && phone2?._id) {
-            setRows([
-                createData('Thương hiệu', phone1.brand, phone2.brand),
-                createData(
-                    'Kích thước màn hình',
-                    phone1.specifications[0],
-                    phone2.specifications[0],
-                ),
-                createData(
-                    'Công nghệ màn hình',
-                    phone1.screen_technology,
-                    phone2.screen_technology,
-                ),
-                createData('Tần số quét', phone1.scanning_frequency, phone2.scanning_frequency),
-                createData('Kiểu màn hình', phone1.display_type, phone2.display_type),
-                createData('Chipset', phone1.chipset, phone2.chipset),
-                createData('Loại CPU', phone1.cpu, phone2.cpu),
-                createData('GPU', phone1.gpu, phone2.gpu),
-                createData('Dung lượng RAM', phone1.specifications[1], phone2.specifications[1]),
-                createData('Bộ nhớ trong', phone1.specifications[2], phone2.specifications[2]),
-                createData('Khe cắm thẻ nhớ', phone1.memory_card, phone2.memory_card),
-                createData('Pin', phone1.batery, phone2.batery),
-                createData('Cổng sạc', phone1.charging_port, phone2.charging_port),
-                createData('Thẻ SIM', phone1.sim, phone2.sim),
-                createData('Hệ điều hành', phone1.operating_system, phone2.operating_system),
-                createData('Công nghệ NFC', phone1.nfc, phone2.nfc),
-                createData('Bluetooth', phone1.bluetooth, phone2.bluetooth),
-                createData('Kích thước', phone1.size, phone2.size),
-                createData('Trọng lượng', phone1.weight, phone2.weight),
-                createData('Thời điểm ra mắt', phone1.time_release, phone2.time_release),
-            ]);
-        } else {
-            // handleClose();
-            // setRows([]);
-        }
-    }, [phone1, phone2, open]);
 
     return (
         phone1 &&
@@ -156,30 +116,64 @@ export default function DialogComparePhone({
                             <Table sx={{ minWidth: 1200 }} aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
-                                        <StyledTableCell></StyledTableCell>
-                                        <StyledTableCell align="left" width={400}>
+                                        <StyledTableCell width={'20%'}></StyledTableCell>
+                                        <StyledTableCell align="left" width={'35%'}>
                                             {phone1.name}
                                         </StyledTableCell>
-                                        <StyledTableCell align="left" width={400}>
+                                        <StyledTableCell align="left" width={'35%'}>
                                             {phone2.name}
                                         </StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows.length &&
-                                        rows?.map((row: any) => (
-                                            <StyledTableRow key={row.name}>
-                                                <StyledTableCell component="th" scope="row">
-                                                    {row.name}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="left">
-                                                    {row.calories}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="left">
-                                                    {row.fat}
+                                    {phone1.technical_infos?.map((info, i) => (
+                                        <>
+                                            <StyledTableRow>
+                                                <StyledTableCell
+                                                    colSpan={3}
+                                                    className="header fs-5 fw-medium px-2"
+                                                >
+                                                    {info.name}
                                                 </StyledTableCell>
                                             </StyledTableRow>
-                                        ))}
+                                            {info?.details?.map((detail, index) => {
+                                                const detailPhone2 = getInfosByTitle(
+                                                    phone2,
+                                                    detail.title,
+                                                );
+                                                return (
+                                                    <StyledTableRow key={index}>
+                                                        <StyledTableCell component="th" scope="row">
+                                                            {detail.title}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="left">
+                                                            {detail.infos.length > 1 ? (
+                                                                <ul className="px-3 mb-0">
+                                                                    {detail.infos.map((info, i) => (
+                                                                        <li key={i}>{info}</li>
+                                                                    ))}
+                                                                </ul>
+                                                            ) : (
+                                                                <>{detail.infos[0]}</>
+                                                            )}
+                                                        </StyledTableCell>
+                                                        {}
+                                                        <StyledTableCell align="left">
+                                                            {detailPhone2.length > 1 ? (
+                                                                <ul className="px-3 mb-0">
+                                                                    {detail.infos.map((info, i) => (
+                                                                        <li key={i}>{info}</li>
+                                                                    ))}
+                                                                </ul>
+                                                            ) : (
+                                                                <>{detailPhone2[0]}</>
+                                                            )}
+                                                        </StyledTableCell>
+                                                    </StyledTableRow>
+                                                );
+                                            })}
+                                        </>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>

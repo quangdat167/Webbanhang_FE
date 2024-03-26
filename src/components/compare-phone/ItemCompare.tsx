@@ -16,7 +16,7 @@ function ItemCompare({ phone, action }: { phone?: IPhone; action: any }) {
     return phone ? (
         <div className="item-compare">
             <>
-                <img src={phone?.images[0]} alt="phone" width={50} />
+                <img src={phone?.colors[0].img} alt="phone" width={50} />
                 <div>{phone?.name}</div>
                 <IconButton
                     aria-label="close"

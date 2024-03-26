@@ -31,7 +31,7 @@ export function getInfosByTitle(phone: IPhone, title: string, name?: string) {
         }
     }
 
-    return 'Khong co';
+    return [];
 }
 
 export function scrollToTop(smooth = false) {

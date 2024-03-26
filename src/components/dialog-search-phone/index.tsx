@@ -75,7 +75,7 @@ export default function DialogSearchPhone({ open, setOpen }: { open: boolean; se
                                 <Card className="h-100 shadow rounded-4">
                                     <div className="text-center">
                                         <Card.Img
-                                            src={phone.images[0]}
+                                            src={phone.colors[0].img}
                                             style={{ width: 160, height: 160, marginTop: 10 }}
                                             alt={phone.name}
                                         />
