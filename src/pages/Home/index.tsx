@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { getAllPhonesApi } from 'service/phone.service';
+import { getMinPrice, scrollToTop } from 'utils';
 import { IPhone } from 'utils/interface';
-import { getMinPrice } from 'utils';
 // import Url from 'utils/url';
 
 const cx = classNames.bind(styles);
@@ -21,14 +21,15 @@ function Home() {
             setPhones(result);
         };
         getPhones();
+        scrollToTop();
     }, []);
     return (
         <Container className="mt-4">
-            <Row className="g-2" xs={2} sm={2} md={3} lg={4} xl={5}>
+            <Row className="g-2" xs={2} md={3} lg={4} xl={5}>
                 {phones.map((phone: IPhone) => (
                     <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
-                        <Card className="h-100 shadow rounded-4">
-                            <div className="text-center">
+                        <Card className="h-100 shadow rounded-3">
+                            <div className="text-center mt-2">
                                 <Link to={`/phones/${phone.slug}`}>
                                     {phone.colors[0]?.img && (
                                         <Card.Img

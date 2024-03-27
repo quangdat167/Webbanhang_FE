@@ -1,8 +1,8 @@
-import { IPhone } from 'utils/interface';
-import Image from 'react-bootstrap/Image';
-import { getMinPrice } from 'utils';
-import { getRandomPhoneApi } from 'service/phone.service';
 import { useEffect, useState } from 'react';
+import Image from 'react-bootstrap/Image';
+import { getRandomPhoneApi } from 'service/phone.service';
+import { getMinPrice } from 'utils';
+import { IPhone } from 'utils/interface';
 function MenuSearchResult({
     items,
     show,
@@ -40,7 +40,12 @@ function MenuSearchResult({
                                 window.open(`/phones/${phone.slug}`, '_self');
                             }}
                         >
-                            <Image src={phone.images[0]} rounded className="image-preview" />
+                            <Image
+                                src={phone.colors[0]?.img}
+                                alt="img"
+                                rounded
+                                className="image-preview"
+                            />
                             <div className="main-content">
                                 <div className="name">{phone.name}</div>
                                 <div className="price">{getMinPrice(phone)}</div>
@@ -58,7 +63,12 @@ function MenuSearchResult({
                                     window.open(`/phones/${phone.slug}`, '_self');
                                 }}
                             >
-                                <Image src={phone.images[0]} rounded className="image-preview" />
+                                <Image
+                                    src={phone.colors[0]?.img}
+                                    alt="img"
+                                    rounded
+                                    className="image-preview"
+                                />
                                 <div className="main-content">
                                     <div className="name">{phone.name}</div>
                                     <div className="price">{getMinPrice(phone)}</div>

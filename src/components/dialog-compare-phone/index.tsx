@@ -113,7 +113,7 @@ export default function DialogComparePhone({
                     </IconButton>
                     <DialogContent dividers>
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 1200 }} aria-label="customized table">
+                            <Table sx={{}} aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell width={'20%'}></StyledTableCell>
@@ -146,7 +146,10 @@ export default function DialogComparePhone({
                                                         <StyledTableCell component="th" scope="row">
                                                             {detail.title}
                                                         </StyledTableCell>
-                                                        <StyledTableCell align="left">
+                                                        <StyledTableCell
+                                                            align="left"
+                                                            style={{ width: '35%' }}
+                                                        >
                                                             {detail.infos.length > 1 ? (
                                                                 <ul className="px-3 mb-0">
                                                                     {detail.infos.map((info, i) => (

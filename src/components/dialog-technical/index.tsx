@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { IPhone } from 'utils/interface';
 import './style.scss';
 
@@ -54,6 +55,8 @@ export default function DialogTechnicalPhone({
     setOpen: Function;
     phone: IPhone;
 }) {
+    const isTablet = useMediaQuery('(max-width: 1024px)');
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -87,7 +90,7 @@ export default function DialogTechnicalPhone({
                         <TableContainer component={Paper}>
                             <Table
                                 stickyHeader
-                                sx={{ minWidth: '700px' }}
+                                sx={isTablet ? {} : { minWidth: '700px' }}
                                 aria-label="customized table"
                             >
                                 <TableHead>

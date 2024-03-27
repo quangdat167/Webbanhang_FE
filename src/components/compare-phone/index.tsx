@@ -1,14 +1,14 @@
 // import Button from '@mui/material/Button';
-import { Button } from 'react-bootstrap';
-import ItemCompare from './ItemCompare';
 import CloseIcon from '@mui/icons-material/Close';
-import './style.scss';
 import IconButton from '@mui/material/IconButton';
+import DialogComparePhone from 'components/dialog-compare-phone';
+import { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeComparePhone1, changeComparePhone2, openCompare } from 'redux/reducer/compare';
 import { RootState } from 'redux/store';
-import DialogComparePhone from 'components/dialog-compare-phone';
-import { useEffect, useState } from 'react';
+import ItemCompare from './ItemCompare';
+import './style.scss';
 
 function ComparePhone() {
     const dispatch = useDispatch();

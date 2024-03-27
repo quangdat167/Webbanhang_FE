@@ -1,9 +1,9 @@
 import { IPhone } from './interface';
 
 export function getMinPrice(phone: IPhone): string | undefined {
-    const prices = phone.prices.map((priceObject) => priceObject.price);
+    const prices = phone?.prices?.map((priceObject) => priceObject.price);
 
-    if (prices.length === 0) {
+    if (prices?.length === 0) {
         return undefined; // No prices available
     }
 

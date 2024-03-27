@@ -2,29 +2,26 @@
 import classnames from 'classnames/bind';
 import styles from './Header.module.scss';
 
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
-import Paper from '@mui/material/Paper';
 import ButtonAuth from 'components/ButtonAuth/buttonAuth';
 import Cart from 'components/ButtonCart/cart';
 import MenuUser from 'components/MenuUser';
-import MenuSearchResult from 'components/menu-search-result';
+import InputSearchPhone from 'components/input-search-phone';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'redux/store';
-import './styles.scss';
-import InputSearchPhone from 'components/input-search-phone';
-import Config from 'utils/Config';
 import RouteConfig from 'routes/Route';
+import Config from 'utils/Config';
+import './styles.scss';
 
 const cx = classnames.bind(styles);
 function Header() {
     const userInfo = useSelector((state: RootState) => state.userInfoState);
     return (
         <div className="header-wrapper">
-            <nav className="navbar navbar-expand" style={{ backgroundColor: 'var(--primary)' }}>
+            <nav
+                className="navbar navbar-expand"
+                style={{ backgroundColor: 'var(--primary)', padding: 8, height: 64 }}
+            >
                 <div className={cx('container-1200', 'container flex-nowrap')}>
                     <Link
                         className="navbar-brand text-light"

@@ -2,24 +2,26 @@
 
 import { faCaretRight, faCartPlus, faGift } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonBuy from 'components/ButtonBuy/buttonBuy';
-import { useEffect, useState } from 'react';
-import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import { IColors, IPhone, IPrices } from 'utils/interface';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useMediaQuery } from '@mui/material';
+import ButtonBuy from 'components/ButtonBuy/buttonBuy';
 import ComparePhone from 'components/compare-phone';
 import DialogTechnicalPhone from 'components/dialog-technical';
 import TechnicalCommon from 'components/technical-common';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { changeComparePhone1, openCompare } from 'redux/reducer/compare';
 import { RootState } from 'redux/store';
 import { addToCartApi } from 'service/cart.service';
 import { getPhoneApi } from 'service/phone.service';
-import { formatNumberWithCommas, scrollToTop } from 'utils';
+import { formatNumberWithCommas } from 'utils';
+import { IColors, IPhone, IPrices } from 'utils/interface';
 import './style.scss';
-
 function PhonePage() {
+    const isTablet = useMediaQuery('(max-width: 1024px)');
     const userInfo = useSelector((state: RootState) => state.userInfoState);
     const compareState = useSelector((state: RootState) => state.compareState);
 
@@ -31,10 +33,13 @@ function PhonePage() {
     const [phonePrice, setPhonePrice] = useState<IPrices>({} as IPrices);
     const [phoneColor, setPhoneColor] = useState<IColors>({} as IColors);
     const [openDialogTechnical, setOpenDialogTechnical] = useState(false);
+    const [widthColLeft, setWidthColLeft] = useState(0);
+    const [showBtnShowMore, setShowBtnShowMore] = useState(true);
+    const [showMoreDetail, setShowMoreDetail] = useState(false);
 
-    useEffect(() => {
-        scrollToTop();
-    }, []);
+    // useEffect(() => {
+    //     scrollToTop();
+    // }, []);
 
     useEffect(() => {
         const fetchPhone = async () => {
@@ -58,6 +63,23 @@ function PhonePage() {
         localStorage.setItem('carts', JSON.stringify(carts));
     }, [carts]);
 
+    const colLeftRef: any = useRef(null);
+    const phonePageRef: any = useRef(null);
+
+    useEffect(() => {
+        if (colLeftRef?.current) {
+            const width = colLeftRef.current.getBoundingClientRect().width;
+            setWidthColLeft(width - 24 - 16 * 2);
+        }
+    }, [colLeftRef?.current]);
+
+    useEffect(() => {
+        if (isTablet && phonePageRef?.current) {
+            const width = phonePageRef.current.getBoundingClientRect().width;
+            setWidthColLeft(width);
+        }
+    }, [phonePageRef?.current]);
+
     const handleSelectCarousel = (selectedIndex: number) => {
         setIndexCarousel(selectedIndex);
     };
@@ -68,17 +90,6 @@ function PhonePage() {
 
     // Thêm vào giỏ hàng
     const handleAddToCart = async () => {
-        // const phoneAddToCart: ICartItem = {
-        //     _id: phone._id,
-        //     name: phone.name,
-        //     type: phonePrice.type,
-        //     image: phoneColor?.img!,
-        //     price: phonePrice.price,
-        //     color: phoneColor.color,
-        //     promotion: phone.promotion,
-        //     url: `/phones/${phone.slug}`,
-        //     quantity: 1,
-        // };
         if (userInfo.email) {
             await addToCartApi({
                 userId: userInfo._id,
@@ -96,10 +107,29 @@ function PhonePage() {
         dispatch(changeComparePhone1(phone));
     };
 
+    const setImgWidth = (htmlContent: any, width: any) => {
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = htmlContent;
+
+        const imgElements = tempElement.querySelectorAll('img');
+        const iframeElements = tempElement.querySelectorAll('iframe');
+        imgElements.forEach((img) => {
+            img.style.width = width + 'px';
+            img.style.borderRadius = 8 + 'px';
+            img.loading = 'lazy';
+        });
+        iframeElements.forEach((img) => {
+            img.style.width = width + 'px';
+            img.style.borderRadius = 8 + 'px';
+        });
+
+        return tempElement.innerHTML;
+    };
+
     return (
-        <Container style={{ maxWidth: 1200 }} className="phone-page mt-4">
+        <Container style={{ maxWidth: 1300 }} className="phone-page mt-4" ref={phonePageRef}>
             <div className="d-flex gap-2">
-                <h4 className="fw-700">{phone.name}</h4>
+                <h4 className="fw-700 mb-0">{phone.name}</h4>
                 {/* <Link to="/" className="ms-auto">
                         Tất cả điện thoại
                     </Link> */}
@@ -110,7 +140,7 @@ function PhonePage() {
             <hr />
 
             <Row className="row-cols-sm-1 row-cols-md-2">
-                <Col md={5} lg={7} className="h-100">
+                <Col md={5} lg={7} className="h-100" ref={colLeftRef}>
                     <Carousel
                         activeIndex={indexCarousel}
                         onSelect={handleSelectCarousel}
@@ -121,7 +151,7 @@ function PhonePage() {
                             <Carousel.Item key={index}>
                                 <img
                                     className="d-block mx-auto"
-                                    height={400}
+                                    height={isTablet ? 300 : 400}
                                     style={{ objectFit: 'contain', maxWidth: '100%' }}
                                     src={img}
                                     alt={img}
@@ -129,7 +159,7 @@ function PhonePage() {
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <div className={'list-image-swipe mt-2 mb-1 w-100  overflow-x-auto '}>
+                    <div className={'list-image-swipe mt-2 mb-1 py-2 w-100  overflow-x-auto '}>
                         {phone.images.map((img, index) => (
                             <img
                                 key={index}
@@ -146,7 +176,7 @@ function PhonePage() {
                     </div>
 
                     {/* {{! Đặc điểm nổi bật }} */}
-                    <div className="mt-2 pt-2 pe-2 mb-2 bg-body-secondary bg-opacity-75 border rounded-3">
+                    <div className="mt-2 pt-2 pe-2 mb-2 bg-body-secondary bg-opacity-75 border rounded-3 shadow-sm">
                         <h5 className="text-center text-danger fw-bold">ĐẶC ĐIỂM NỔI BẬT</h5>
                         <ul>
                             {phone.description.map((item, index) => (
@@ -156,6 +186,35 @@ function PhonePage() {
                             ))}
                         </ul>
                     </div>
+                    {!isTablet && (
+                        <div
+                            className="more-info mt-4 p-3 shadow border rounded-3 overflow-hidden"
+                            style={!showMoreDetail ? { height: 450 } : {}}
+                        >
+                            <div className="fs-4 fw-medium mb-3">Thông tin sản phẩm</div>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: setImgWidth(phone?.information, widthColLeft),
+                                }}
+                            />
+                            {showBtnShowMore && (
+                                <div className="show-more center ">
+                                    <Button
+                                        onClick={() => {
+                                            setShowMoreDetail(true);
+                                            setShowBtnShowMore(false);
+                                        }}
+                                        variant="outline-light"
+                                        className={`button-show-more center fs-14 px-2 py-2 mb-4 border border-secondary-subtle text-dark shadow-lg`}
+                                        style={{ width: '50%' }}
+                                    >
+                                        <div>Xem thêm</div>
+                                        <KeyboardArrowDownIcon className="ms-2" />
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </Col>
 
                 {/* {{! Cột bên phải }} */}
@@ -173,9 +232,9 @@ function PhonePage() {
                                     setPhonePrice(price);
                                 }}
                                 variant="outline-light"
-                                className={`fs-12 px-2 py-2 mb-2 me-2 border text-dark ${
+                                className={`button-select-option fs-12 px-2 py-2 mb-2 me-2 border text-dark ${
                                     phonePrice.price === price.price
-                                        ? 'border-danger'
+                                        ? 'active border-danger'
                                         : 'border-dark-subtle'
                                 }
                                      `}
@@ -197,17 +256,29 @@ function PhonePage() {
                                 onClick={() => setPhoneColor(color)}
                                 variant="outline-light"
                                 className={
-                                    'fs-12 px-1 py-2 mb-2 me-2 btn border text-dark ' +
+                                    'button-select-option ' +
+                                    'fs-12 px-2 py-2 mb-2 me-2 btn border text-dark ' +
                                     `${
                                         phoneColor?.color === color.color
-                                            ? 'border-danger'
+                                            ? 'active border-danger'
                                             : 'border-dark-subtle'
                                     }`
                                 }
-                                style={{ width: 'calc(33.33333% - 0.7rem)' }}
+                                style={{ width: 'calc(33.33333% - 0.7rem)', height: 50 }}
                             >
-                                <img src={color.img} alt={color.color} style={{ width: '2rem' }} />
-                                <span className="ms-2 fw-semibold">{color.color}</span>
+                                <div className="center">
+                                    <img
+                                        src={color.img}
+                                        alt={color.color}
+                                        style={{ width: '2rem' }}
+                                    />
+                                    <span
+                                        className="ms-2 fw-semibold"
+                                        style={{ textAlign: 'left' }}
+                                    >
+                                        {color.color}
+                                    </span>
+                                </div>
                             </Button>
                         ))}
                     </div>
@@ -231,7 +302,11 @@ function PhonePage() {
                                 >
                                     <CheckCircleIcon
                                         color="success"
-                                        style={{ width: 16, height: 16, marginTop: 2 }}
+                                        style={
+                                            isTablet
+                                                ? { width: 12, height: 12, marginTop: 2 }
+                                                : { width: 16, height: 16, marginTop: 2 }
+                                        }
                                     />
                                     <div> {promotion}</div>
                                 </a>
@@ -264,17 +339,46 @@ function PhonePage() {
                             <TechnicalCommon phone={phone} />
                         </div>
                         <Button
-                            variant="outline-primary"
-                            className="button-details mx-5 my-3 px-4 py-2 center gap-3"
+                            variant="outline-light"
+                            className="button-details mx-5 my-3 px-4 py-2 center gap-3 border border-secondary-subtle text-dark"
                             onClick={() => {
                                 setOpenDialogTechnical(true);
                             }}
                         >
                             <p className="mb-0 fs-7">Xem thêm cấu hình chi tiết</p>
-                            <FontAwesomeIcon className="mt-1 fs-5" icon={faCaretRight} />
+                            <FontAwesomeIcon className="fs-5" icon={faCaretRight} />
                         </Button>
                     </div>
                 </Col>
+                {isTablet && (
+                    <div
+                        className="more-info mt-4 p-3 shadow border rounded-3 overflow-hidden"
+                        style={{ width: widthColLeft, ...(!showMoreDetail ? { height: 300 } : {}) }}
+                    >
+                        <div className="fs-4 fw-medium mb-3">Thông tin sản phẩm</div>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: setImgWidth(phone?.information, widthColLeft - 24),
+                            }}
+                        />
+                        {showBtnShowMore && (
+                            <div className="show-more center ">
+                                <Button
+                                    onClick={() => {
+                                        setShowMoreDetail(true);
+                                        setShowBtnShowMore(false);
+                                    }}
+                                    variant="outline-light"
+                                    className={`button-show-more center fs-14 px-2 py-2 mb-4 border border-secondary-subtle text-dark shadow-lg`}
+                                    style={{ width: '50%' }}
+                                >
+                                    <div>Xem thêm</div>
+                                    <KeyboardArrowDownIcon className="ms-2" />
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                )}
             </Row>
             {compareState.open && <ComparePhone />}
             <DialogTechnicalPhone

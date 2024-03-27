@@ -1,14 +1,16 @@
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Paper from '@mui/material/Paper';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuSearchResult from 'components/menu-search-result';
 import { useEffect, useState } from 'react';
 import { searchPhoneByNameApi } from 'service/phone.service';
 import { IPhone } from 'utils/interface';
+import './style.scss';
 
 function InputSearchPhone() {
+    const isTablet = useMediaQuery('(max-width: 1024px)');
     const [keyword, setKeyword] = useState('');
     const [resultSearch, setResultSearch] = useState([] as IPhone[]);
     const [showPopupResult, setShowPopupResult] = useState(false);
@@ -38,13 +40,32 @@ function InputSearchPhone() {
     }, [keyword]);
 
     return (
-        <div className="search-wrapper">
+        <div
+            className="search-wrapper"
+            style={{
+                width: isTablet ? '35%' : 500,
+            }}
+        >
             <Paper
                 component="form"
-                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                sx={{
+                    p: '2px 16px 2px 4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
             >
-                <IconButton sx={{ p: '10px' }} aria-label="menu">
+                {/* <IconButton sx={{ p: '10px' }} aria-label="menu">
                     <MenuIcon />
+                </IconButton> */}
+                <IconButton
+                    type="button"
+                    sx={{ p: '10px' }}
+                    aria-label="search"
+                    onClick={() => {
+                        setShowPopupResult(true);
+                    }}
+                >
+                    <SearchIcon />
                 </IconButton>
                 <InputBase
                     onFocus={() => {
@@ -57,9 +78,6 @@ function InputSearchPhone() {
                     placeholder="Tìm kiếm điện thoại"
                     inputProps={{ 'aria-label': 'Tìm kiếm điện thoại' }}
                 />
-                <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                    <SearchIcon />
-                </IconButton>
             </Paper>
 
             <MenuSearchResult

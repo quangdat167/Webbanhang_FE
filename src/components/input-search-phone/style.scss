@@ -1,0 +1,88 @@
+.search-wrapper {
+    position: relative;
+    @media screen and (max-width: 1024px) {
+        position: initial;
+    }
+
+    .menu-search-result {
+        margin-top: 12px;
+        background-color: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        min-height: 160px;
+        z-index: 100;
+        border-radius: 8px;
+        max-height: 600px;
+        overflow-y: scroll;
+
+        @media screen and (max-width: 1024px) {
+            width: calc(100vw - 2rem);
+            top: 90%;
+            left: 1rem;
+        }
+
+        .item-phone-search {
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            height: 80px;
+
+            &:hover {
+                background-color: rgba(var(--rgb-primary), 0.1);
+            }
+
+            .image-preview {
+                width: 60px;
+                height: 60px;
+
+                @media screen and (max-width: 1024px) {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+
+            .main-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .name {
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+
+                .price {
+                    color: var(--primary);
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .recoment-wrapper {
+            padding: 8px;
+            .recoment-title {
+                color: #4a4a4a;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 1.5;
+            }
+        }
+    }
+
+    .header-overlay {
+        background: rgba(0, 0, 0, 0.53);
+        height: 100vh;
+        left: 0;
+        position: fixed;
+        top: 64px;
+        transition: 0.3s;
+        width: 100%;
+        z-index: 30;
+    }
+}

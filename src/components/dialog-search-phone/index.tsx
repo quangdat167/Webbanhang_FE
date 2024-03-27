@@ -16,7 +16,8 @@ import { Link } from 'react-router-dom';
 import { getMinPrice } from 'utils';
 import { useDispatch } from 'react-redux';
 import { changeComparePhone2 } from 'redux/reducer/compare';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
+import AddIcon from '@mui/icons-material/Add';
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(2),
@@ -27,6 +28,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export default function DialogSearchPhone({ open, setOpen }: { open: boolean; setOpen: Function }) {
+    const isTablet = useMediaQuery('(max-width: 1024px)');
+
     const dispatch = useDispatch();
     const handleClickOpen = () => {
         setOpen(true);
@@ -69,14 +72,18 @@ export default function DialogSearchPhone({ open, setOpen }: { open: boolean; se
                     <CloseIcon />
                 </IconButton>
                 <DialogContent dividers>
-                    <Row className="g-2" xs={2} sm={2} md={3} lg={4} xl={5}>
+                    <Row className="g-2" xs={2} sm={2} md={3} xl={4} xxl={5}>
                         {phones.map((phone: IPhone) => (
                             <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
                                 <Card className="h-100 shadow rounded-4">
-                                    <div className="text-center">
+                                    <div className="text-center mt-3">
                                         <Card.Img
                                             src={phone.colors[0].img}
-                                            style={{ width: 160, height: 160, marginTop: 10 }}
+                                            style={
+                                                isTablet
+                                                    ? { width: 120, height: 120 }
+                                                    : { width: 160, height: 160 }
+                                            }
                                             alt={phone.name}
                                         />
                                     </div>
@@ -100,8 +107,10 @@ export default function DialogSearchPhone({ open, setOpen }: { open: boolean; se
                                                     dispatch(changeComparePhone2(phone));
                                                     handleClose();
                                                 }}
+                                                className="center"
                                             >
-                                                + Chọn để so sánh
+                                                <AddIcon />
+                                                Chọn để so sánh
                                             </Button>
                                         </div>
                                     </Card.Body>
