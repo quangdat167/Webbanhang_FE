@@ -40,3 +40,27 @@ export function scrollToTop(smooth = false) {
         behavior: smooth ? 'smooth' : 'auto',
     });
 }
+
+export function convertStringsToMinMax(arr: string[]) {
+    if (arr && arr?.length) {
+        // Khởi tạo mảng kết quả rỗng
+        let result: any = [];
+
+        // Duyệt qua mỗi chuỗi trong mảng đầu vào
+        arr?.forEach((str) => {
+            // Loại bỏ ký tự "[" ở đầu và "]" ở cuối chuỗi
+            const cleanedStr = str.replace(/^\[|\]$/g, '');
+            // Chuyển chuỗi thành mảng số bằng cách parse chuỗi JSON
+            const array = JSON.parse(`[${cleanedStr}]`);
+            // Thêm mảng số vào mảng kết quả
+            result = [...result, ...array];
+        });
+
+        // Tìm phần tử min và max trong mảng kết quả
+        const min = Math.min(...result);
+        const max = Math.max(...result);
+
+        // Trả về mảng chứa phần tử min và max
+        return [min, max];
+    } else return [];
+}

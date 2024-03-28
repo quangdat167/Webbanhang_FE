@@ -63,3 +63,19 @@ export interface IOrder {
     userInfo?: IUserInfo;
     createdAt?: Date;
 }
+
+export interface IFilter {
+    brand: string[];
+    price: string[];
+    type: string[];
+    ram: string[];
+    rom: string[];
+    charging_feature: string[];
+}
+
+export interface IHomeState {
+    phones: IPhone[];
+    loading: boolean;
+    offset: number;
+    limit: number;
+}

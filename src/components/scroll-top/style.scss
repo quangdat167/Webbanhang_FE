@@ -1,0 +1,56 @@
+.scroll-to-top-auto {
+    z-index: 1000;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: var(--primary);
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(34, 17, 17, 0.12);
+    cursor: pointer;
+    margin: 0 17px 12px auto;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+
+    @media screen and (max-width: 1024px) {
+        bottom: 64px;
+    }
+
+    &:hover {
+        height: 50px;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+
+        &.up,
+        &.next {
+            height: 58px;
+            -webkit-border-radius: 40px;
+            -moz-border-radius: 40px;
+        }
+
+        &.next {
+            bottom: 40px;
+        }
+    }
+
+    .btnn {
+        position: relative;
+        color: #fff;
+        top: -1px;
+        -webkit-transition: -webkit-transform 0.3s ease;
+        transition: -webkit-transform 0.3s ease;
+        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+        vertical-align: middle;
+    }
+
+    .custom-tooltip {
+        --bs-tooltip-bg: var(--bd-violet-bg);
+        --bs-tooltip-color: var(--bs-white);
+    }
+}

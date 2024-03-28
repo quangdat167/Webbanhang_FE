@@ -1,20 +1,21 @@
-import { auth } from 'firebaseConfig/firebase';
-import React, { Fragment, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { getUserInfoReducer } from 'redux/reducer/userinfo';
-import { RootState } from 'redux/store';
-import { getUserInfoApi } from 'service/authen.service';
-import { DefaultLayout } from './components/Layout';
-import { privateRoutes, publicRoutes } from './routes';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import Config from 'utils/Config';
-import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import ScrollToTopEle from 'components/scroll-top';
+import { auth } from 'firebaseConfig/firebase';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { clearSnackbar } from 'redux/reducer/snackbar';
+import { getUserInfoReducer } from 'redux/reducer/userinfo';
+import { RootState } from 'redux/store';
+import { getUserInfoApi } from 'service/authen.service';
+import Config from 'utils/Config';
+import { DefaultLayout } from './components/Layout';
+import { privateRoutes, publicRoutes } from './routes';
 
 function App() {
     const dispatch = useDispatch();
@@ -122,6 +123,7 @@ function App() {
                         {snackbarState.content}
                     </Alert>
                 </Snackbar>
+                <ScrollToTopEle />
             </div>
         </Router>
     );

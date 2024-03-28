@@ -54,3 +54,19 @@ export const getRandomPhoneApi = async (args: { limit: number }) => {
         return data;
     });
 };
+
+export const filterPhoneApi = async (args: {
+    brand: string[];
+    price: number[];
+    type: string[];
+    ram: string[];
+    rom: string[];
+    charging_feature: string[];
+}) => {
+    return await POST({
+        url: APIConfig.FILTER_PHONE,
+        params: args,
+    }).then((data: any) => {
+        return data;
+    });
+};

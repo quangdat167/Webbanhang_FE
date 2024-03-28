@@ -42,14 +42,16 @@ function PhonePage() {
     // }, []);
 
     useEffect(() => {
-        const fetchPhone = async () => {
-            if (slug) {
-                const result = await getPhoneApi({ slug: slug });
+        return () => {
+            const fetchPhone = async () => {
+                if (slug) {
+                    const result = await getPhoneApi({ slug: slug });
 
-                setPhone(result);
-            }
+                    setPhone(result);
+                }
+            };
+            fetchPhone();
         };
-        fetchPhone();
     }, [slug]);
 
     useEffect(() => {
