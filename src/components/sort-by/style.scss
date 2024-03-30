@@ -1,0 +1,28 @@
+.sortby-wrapper {
+    .sortby-button {
+        display: flex;
+        gap: 0.5rem;
+        .sortby-item {
+            padding: 0.5rem;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            gap: 0.5rem;
+            user-select: none;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            position: relative;
+            background-color: #fff;
+
+            &:hover {
+                cursor: pointer;
+                border-color: var(--primary) !important;
+            }
+
+            &.active {
+                border-color: var(--primary) !important;
+                color: var(--primary) !important;
+            }
+        }
+    }
+}

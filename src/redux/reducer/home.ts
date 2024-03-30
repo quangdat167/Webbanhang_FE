@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import Config from 'utils/Config';
 import { IHomeState } from 'utils/interface';
 
 export const initialState: IHomeState = {
@@ -6,6 +7,7 @@ export const initialState: IHomeState = {
     loading: false,
     offset: 0,
     limit: 20,
+    sortby: Config.SORT_BY.POPULAR,
 };
 
 export const homeSlice = createSlice({
@@ -24,8 +26,14 @@ export const homeSlice = createSlice({
                 phones: action.payload,
             };
         },
+        updateSortByHome: (state, action) => {
+            return {
+                ...state,
+                sortby: action.payload,
+            };
+        },
     },
 });
-export const { updateLoadingHome, updatePhoneHome } = homeSlice.actions;
+export const { updateLoadingHome, updatePhoneHome, updateSortByHome } = homeSlice.actions;
 
 export const HomeReducer = homeSlice.reducer;

@@ -1,26 +1,101 @@
 .box-filter {
     display: flex;
-    padding: 1rem 0;
+    padding: 0.25rem 0 1rem;
     transition: all 0.3s;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 
     .filter-total {
-        border: 1px solid #e0e0e0;
-        position: relative;
         border-radius: 4px;
+        position: relative;
+
+        .show-total {
+            padding: 0.5rem 0 !important;
+            min-width: 900px;
+            max-height: 80vh;
+
+            @media screen and (max-width: 1024px) {
+                width: 100vw;
+                min-width: initial;
+            }
+        }
+    }
+
+    .other-options-price {
+        cursor: pointer;
+        width: max-content;
+        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 0.25rem;
+        color: var(--primary);
+        padding: 0 0.25rem;
+        transition: 0.4s;
+        user-select: none;
+
+        .arrow-icon {
+            &.rotate {
+                animation: rotateOpen 0.3s forwards;
+            }
+
+            &.close {
+                animation: rotateClose 0.3s forwards;
+            }
+
+            @keyframes rotateOpen {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(180deg);
+                }
+            }
+
+            @keyframes rotateClose {
+                0% {
+                    transform: rotate(180deg);
+                }
+                100% {
+                    transform: rotate(0deg);
+                }
+            }
+        }
+    }
+
+    .value-price-wrapper {
+        display: none;
+        padding: 0 0.5rem;
+
+        &.show {
+            display: block;
+            animation: showElem 0.3s forwards;
+        }
+        &.hide {
+            display: block;
+            animation: hideElem 0.3s forwards;
+        }
+    }
+
+    .filter-item {
+        padding: 0.5rem;
+        display: flex;
+        user-select: none;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        position: relative;
         background-color: #fff;
 
+        &.hightlight,
         &:hover {
             cursor: pointer;
             border-color: var(--primary) !important;
         }
-        .filter-item {
-            padding: 0.5rem;
-            display: flex;
-        }
-        &.active {
-            z-index: 3;
-            border: 1.5px solid var(--primary);
 
+        &.active {
+            z-index: 4;
+            border: 1.5px solid var(--primary);
+            @media screen and (max-width: 1024px) {
+                z-index: 2;
+            }
             .filter-arrow {
                 width: 27px;
                 height: 14px;
@@ -28,6 +103,10 @@
                 left: 25px;
                 position: absolute;
                 overflow: hidden;
+
+                @media screen and (max-width: 1024px) {
+                    display: none;
+                }
 
                 &::before {
                     content: '';
@@ -42,89 +121,48 @@
                 }
             }
         }
-
-        .other-options-price {
-            cursor: pointer;
-            width: max-content;
-            margin-bottom: 0.5rem;
-            display: flex;
-            gap: 0.25rem;
-            color: var(--primary);
-            padding: 0 0.25rem;
-            transition: 0.4s;
-            user-select: none;
-
-            .arrow-icon {
-                svg {
-                    width: 28px;
-                    height: 28px;
-                }
-
-                &.rotate {
-                    animation: rotateOpen 0.3s forwards;
-                }
-
-                &.close {
-                    animation: rotateClose 0.3s forwards;
-                }
-
-                @keyframes rotateOpen {
-                    0% {
-                        transform: rotate(0deg);
-                    }
-                    100% {
-                        transform: rotate(180deg);
-                    }
-                }
-
-                @keyframes rotateClose {
-                    0% {
-                        transform: rotate(180deg);
-                    }
-                    100% {
-                        transform: rotate(0deg);
-                    }
-                }
-            }
-        }
-
-        .value-price-wrapper {
-            display: none;
-            padding: 0 0.5rem;
-
-            &.show {
-                display: block;
-                animation: showElem 0.3s forwards;
-            }
-            &.hide {
-                display: block;
-                animation: hideElem 0.3s forwards;
-            }
-        }
     }
 
     .filter-show {
         display: none;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
         background-color: #fff;
         border-radius: 4px;
         max-width: 600px;
-        min-width: 382px;
+        // min-width: 382px;
         left: 0;
         position: absolute;
-        padding: 10px 10px 0 10px;
         top: 50px;
         width: max-content;
         white-space: normal;
         z-index: 3;
         cursor: default;
 
+        @media screen and (max-width: 1024px) {
+            max-width: initial;
+        }
+
+        &.right {
+            right: 0;
+            left: auto;
+        }
+
         &.show-total {
             display: block;
-            overflow-y: auto;
-            padding: 0.5rem 0;
-            width: 900px;
-            max-width: 900px;
+            // overflow-y: auto;
+            padding: 0.75rem;
+            padding-bottom: 0;
+            // max-width: 900px;
+            width: max-content;
             max-height: 80vh;
+
+            @media screen and (max-width: 1024px) {
+                position: fixed;
+                width: 100vw;
+                height: fit-content;
+                top: 64px;
+                z-index: 6;
+            }
         }
 
         .title {
@@ -173,19 +211,47 @@
             top: 10px;
             cursor: pointer;
         }
+
+        .filter-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+
+            background-color: #fff;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.05);
+            margin: 8px -10px 0;
+            padding: 8px 10px;
+            text-align: center;
+        }
     }
 
-    .filter-overlay {
-        &::before {
-            content: '';
-            height: 100%;
-            left: 0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 2;
-            background-color: rgba(0 0 0 / 0.4);
-        }
+    .filter-wrapper {
+        position: relative;
+    }
+}
+.filter-overlay {
+    &::before {
+        content: '';
+        height: 100%;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 2;
+    }
+}
+
+.filter-overlay-total {
+    &::before {
+        content: '';
+        height: 100%;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 2;
+        background-color: rgba(0 0 0 / 0.4);
     }
 }
 

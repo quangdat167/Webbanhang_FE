@@ -36,6 +36,7 @@ export interface IPhone {
     information: string;
     priority: number;
     technical_infos: ITechnicalInfos[];
+    min_price?: number;
 }
 
 export interface IProduct {
@@ -78,4 +79,5 @@ export interface IHomeState {
     loading: boolean;
     offset: number;
     limit: number;
+    sortby: string;
 }

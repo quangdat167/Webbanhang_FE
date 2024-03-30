@@ -4,6 +4,7 @@ import styles from './Home.module.scss';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FilterPhone from 'components/filter-phone';
+import SortBy from 'components/sort-by';
 import { useEffect } from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +33,7 @@ function Home() {
     return (
         <Container className="mt-4">
             <FilterPhone />
+            <SortBy />
             <Row className="g-2" xs={2} md={3} lg={4} xl={5}>
                 {homeState?.phones.length ? (
                     homeState?.phones?.map((phone: IPhone) => (

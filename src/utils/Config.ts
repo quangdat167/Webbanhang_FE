@@ -15,6 +15,12 @@ class Config {
     static MODE_VIEW_EVENT = 'view';
     static MODE_EDIT_EVENT = 'edit';
     static MODE_CREATE_EVENT = 'create';
+
+    static SORT_BY = {
+        PRICE_DESC: 'price_desc',
+        PRICE_ASC: 'price_asc',
+        POPULAR: 'popular',
+    };
 }
 
 export default Config;
