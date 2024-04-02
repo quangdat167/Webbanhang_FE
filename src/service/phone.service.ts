@@ -63,6 +63,8 @@ export const filterPhoneApi = async (args: {
     rom: string[];
     charging_feature: string[];
     sortby: string;
+    skip: number;
+    limit: number;
 }) => {
     return await POST({
         url: APIConfig.FILTER_PHONE,

@@ -4,6 +4,7 @@ import {
     faEye,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSortByHome } from 'redux/reducer/home';
 import { RootState } from 'redux/store';
@@ -17,6 +18,11 @@ function SortBy() {
     const updateSortBy = (sortby: string) => {
         dispatch(updateSortByHome(sortby));
     };
+
+    useEffect(() => {
+        if (sortbyState !== Config.SORT_BY.POPULAR)
+            dispatch(updateSortByHome(Config.SORT_BY.POPULAR));
+    }, [window?.location?.pathname]);
 
     return (
         <>

@@ -11,6 +11,11 @@ export function getMinPrice(phone: IPhone): string | undefined {
     return minPrice;
 }
 
+export function convertToVND(number: number) {
+    const price = formatNumberWithCommas(number);
+    return price;
+}
+
 export function formatNumberWithCommas(number: any) {
     return number?.toLocaleString('vi-VN') + ' đ';
 }
@@ -34,10 +39,11 @@ export function getInfosByTitle(phone: IPhone, title: string, name?: string) {
     return [];
 }
 
-export function scrollToTop(smooth = false) {
+export function scrollToTop(smooth = true) {
     window.scrollTo({
         top: 0,
-        behavior: smooth ? 'smooth' : 'auto',
+        left: 0,
+        behavior: smooth ? 'smooth' : undefined,
     });
 }
 

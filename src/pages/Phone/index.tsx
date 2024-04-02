@@ -127,7 +127,7 @@ function PhonePage() {
     };
 
     return (
-        <Container style={{ maxWidth: 1300 }} className="phone-page mt-4" ref={phonePageRef}>
+        <Container style={{ maxWidth: 1300 }} className="phone-page mt-4 p-0" ref={phonePageRef}>
             <div className="d-flex gap-2">
                 <h4 className="fw-700 mb-0">{phone.name}</h4>
                 {/* <Link to="/" className="ms-auto">
@@ -150,7 +150,7 @@ function PhonePage() {
                         {phone.images.map((img, index) => (
                             <Carousel.Item key={index}>
                                 <img
-                                    className="d-block mx-auto"
+                                    className="d-block w-100"
                                     height={isTablet ? 300 : 400}
                                     style={{ objectFit: 'contain', maxWidth: '100%' }}
                                     src={img}

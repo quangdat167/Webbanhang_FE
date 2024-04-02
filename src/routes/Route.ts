@@ -6,6 +6,12 @@ class RouteConfig {
     static DASHBOARD = '/dashboard';
     static CONFIRM_INFO = '/confirm-info';
     static ORDER = '/order';
+    static PHONES = '/phones';
+    static BACKUPCHARGER = '/sac-dp';
+    static ADAPTER = '/adapter';
+    static CAPBLE = '/capble';
+    static GLASS = '/cuong-luc';
+    static CASE = '/case';
 
     static ADMIN_HOME = '/admin';
     static ADMIN_ADD_PHONE = '/admin/add-phone';

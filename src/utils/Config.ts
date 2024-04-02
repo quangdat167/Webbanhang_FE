@@ -21,6 +21,7 @@ class Config {
         PRICE_ASC: 'price_asc',
         POPULAR: 'popular',
     };
+    static LIMIT_ITEM_PER_PAGE = 20;
 }
 
 export default Config;

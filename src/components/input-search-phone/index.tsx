@@ -43,7 +43,7 @@ function InputSearchPhone() {
         <div
             className="search-wrapper"
             style={{
-                width: isTablet ? '35%' : 500,
+                width: isTablet ? '35%' : '30%',
             }}
         >
             <Paper

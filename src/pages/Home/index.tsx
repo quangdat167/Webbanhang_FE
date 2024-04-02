@@ -3,16 +3,18 @@ import styles from './Home.module.scss';
 
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import FilterPhone from 'components/filter-phone';
 import SortBy from 'components/sort-by';
 import { useEffect } from 'react';
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { updatePhoneHome } from 'redux/reducer/home';
 import { RootState } from 'redux/store';
-import { getAllPhonesApi } from 'service/phone.service';
-import { getMinPrice, scrollToTop } from 'utils';
+import { filterPhoneApi } from 'service/phone.service';
+import { convertStringsToMinMax, getMinPrice, scrollToTop } from 'utils';
+import Config from 'utils/Config';
 import { IPhone } from 'utils/interface';
 
 const cx = classNames.bind(styles);
@@ -20,14 +22,30 @@ const cx = classNames.bind(styles);
 function Home() {
     const dispatch = useDispatch();
     const homeState = useSelector((state: RootState) => state.homeState);
+    const filterState = useSelector((state: RootState) => state.filterState);
+    const sortbyState = useSelector((state: RootState) => state.homeState?.sortby);
+    const offsetState = useSelector((state: RootState) => state.homeState?.offset);
+    const totalRemainingState = useSelector((state: RootState) => state.homeState?.totalRemaining);
+    const { brand, price, type, ram, rom, charging_feature } = filterState;
+
+    const filter = {
+        brand,
+        price: convertStringsToMinMax(price),
+        type,
+        ram,
+        rom,
+        charging_feature,
+        sortby: sortbyState,
+        limit: Config.LIMIT_ITEM_PER_PAGE,
+        skip: (offsetState + 1) * Config.LIMIT_ITEM_PER_PAGE,
+    };
+
+    const fetchPhones = async () => {
+        return await filterPhoneApi({ ...filter });
+    };
     useEffect(() => {
         return () => {
-            const getPhones = async () => {
-                const result = await getAllPhonesApi();
-                dispatch(updatePhoneHome(result));
-            };
-            // getPhones();
-            scrollToTop();
+            scrollToTop(false);
         };
     }, []);
     return (
@@ -107,6 +125,31 @@ function Home() {
                     </>
                 )}
             </Row>
+            {totalRemainingState > 0 && (
+                <div className="pt-5 center ">
+                    <Button
+                        onClick={() => {
+                            fetchPhones().then((result: any) => {
+                                if (result) {
+                                    dispatch(
+                                        updatePhoneHome({
+                                            phones: [...homeState?.phones, ...result.phones],
+                                            totalRemaining: result.totalRemaining,
+                                            offset: offsetState + 1,
+                                        }),
+                                    );
+                                }
+                            });
+                        }}
+                        variant="outline-light"
+                        className={`hover-primary center fs-14 px-2 py-2 mb-4 border border-secondary-subtle text-dark shadow-lg`}
+                        style={{ width: '25%' }}
+                    >
+                        <div>Xem thêm {totalRemainingState} sản phẩm</div>
+                        <KeyboardArrowDownIcon className="ms-2" />
+                    </Button>
+                </div>
+            )}
         </Container>
     );
 }

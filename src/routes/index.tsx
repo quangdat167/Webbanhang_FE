@@ -1,19 +1,24 @@
 import React from 'react';
 
-import HeaderOnly from 'components/Layout/HeaderOnly';
-import Home from 'pages/Home';
-import PhonePage from 'pages/Phone';
-import Cart from 'pages/Cart';
-import SignIn from 'pages/SignIn';
-import SignUp from 'pages/SignUp';
-import RouteConfig from './Route';
 import { DefaultLayout } from 'components/Layout';
-import AdminHome from 'pages/Admin/admin-home';
+import HeaderOnly from 'components/Layout/HeaderOnly';
 import LayoutAdmin from 'components/Layout/LayoutAdmin';
 import AdminAddPhone from 'pages/Admin/admin-add-phone';
-import ConfirmInfo from 'pages/confrim-info';
-import Order from 'pages/Order';
+import AdminHome from 'pages/Admin/admin-home';
 import AdminManageOrder from 'pages/Admin/admin-manage-order';
+import Cart from 'pages/Cart';
+import Home from 'pages/Home';
+import Order from 'pages/Order';
+import PhonePage from 'pages/Phone';
+import SignIn from 'pages/SignIn';
+import SignUp from 'pages/SignUp';
+import AdapterPage from 'pages/adpater';
+import BackupChargerPage from 'pages/backup-charger';
+import CablePage from 'pages/cable';
+import CasePage from 'pages/case';
+import ConfirmInfo from 'pages/confrim-info';
+import GlassPage from 'pages/glass';
+import RouteConfig from './Route';
 
 interface RouterConfig {
     path: string;
@@ -22,8 +27,13 @@ interface RouterConfig {
 }
 
 const publicRoutes: RouterConfig[] = [
-    { path: '/', component: Home, layout: DefaultLayout },
-    { path: '/phone', component: PhonePage, layout: DefaultLayout },
+    { path: RouteConfig.PHONES, component: Home, layout: DefaultLayout },
+    { path: RouteConfig.BACKUPCHARGER, component: BackupChargerPage, layout: DefaultLayout },
+    { path: RouteConfig.ADAPTER, component: AdapterPage, layout: DefaultLayout },
+    { path: RouteConfig.CAPBLE, component: CablePage, layout: DefaultLayout },
+    { path: RouteConfig.CASE, component: CasePage, layout: DefaultLayout },
+    { path: RouteConfig.GLASS, component: GlassPage, layout: DefaultLayout },
+    // { path: '/phone', component: PhonePage, layout: DefaultLayout },
     { path: '/phones/:slug', component: PhonePage, layout: DefaultLayout },
     { path: '/sign-up', component: SignUp, layout: HeaderOnly },
     { path: '/sign-in', component: SignIn, layout: HeaderOnly },
@@ -49,4 +59,4 @@ const privateRoutes: RouterConfig[] = [
         layout: LayoutAdmin,
     },
 ];
-export { publicRoutes, privateRoutes };
+export { privateRoutes, publicRoutes };

@@ -17,6 +17,7 @@ import { updatePhoneHome } from 'redux/reducer/home';
 import { RootState } from 'redux/store';
 import { filterPhoneApi } from 'service/phone.service';
 import { convertStringsToMinMax, formatNumberWithCommas } from 'utils';
+import Config from 'utils/Config';
 import LayoutFilter from './layout-filter';
 import './style.scss';
 const minDistance = 0;
@@ -30,6 +31,7 @@ function FilterPhone() {
     const dispatch = useDispatch();
     const filterState = useSelector((state: RootState) => state.filterState);
     const sortbyState = useSelector((state: RootState) => state.homeState?.sortby);
+    const offsetState = useSelector((state: RootState) => state.homeState?.offset);
     const priceState = filterState?.price;
     const brandState = filterState?.brand;
     const typeState = filterState?.type;
@@ -108,12 +110,19 @@ function FilterPhone() {
             rom,
             charging_feature,
             sortby: sortbyState,
+            limit: Config.LIMIT_ITEM_PER_PAGE,
+            skip: 0,
         };
 
         const fetchPhone = async () => {
             const result = await filterPhoneApi({ ...filter });
             if (result) {
-                dispatch(updatePhoneHome(result.phones));
+                dispatch(
+                    updatePhoneHome({
+                        phones: result.phones,
+                        totalRemaining: result.totalRemaining,
+                    }),
+                );
                 setTotalResult(result.totalPhone);
             }
         };

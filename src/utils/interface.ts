@@ -74,10 +74,27 @@ export interface IFilter {
     charging_feature: string[];
 }
 
+export interface IItem {
+    _id: string;
+    brand?: string;
+    name: string;
+    price: number;
+    image: string;
+    promotion: string[];
+    colors?: IColors[];
+    createdAt: Date;
+    updatedAt: Date;
+    slug: string;
+    information?: string;
+    technical_infos?: DetailOfTechnicalInfo[];
+    description?: String[];
+}
+
 export interface IHomeState {
     phones: IPhone[];
     loading: boolean;
     offset: number;
-    limit: number;
+    totalRemaining: number;
     sortby: string;
+    items: IItem[];
 }
