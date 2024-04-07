@@ -22,6 +22,14 @@ class Config {
         POPULAR: 'popular',
     };
     static LIMIT_ITEM_PER_PAGE = 20;
+    static PRODUCT_TYPE = {
+        PHONE: 'phone',
+        BACKUP_CHARGE: 'backup-charge',
+        ADAPTER: 'adapter',
+        CAPBLE: 'capble',
+        CASE: 'case',
+        GLASS: 'glass',
+    };
 }
 
 export default Config;

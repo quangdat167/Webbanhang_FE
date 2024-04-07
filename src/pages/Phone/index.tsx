@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 import { faCaretRight, faCartPlus, faGift } from '@fortawesome/free-solid-svg-icons';
@@ -8,7 +9,7 @@ import { useMediaQuery } from '@mui/material';
 import ButtonBuy from 'components/ButtonBuy/buttonBuy';
 import ComparePhone from 'components/compare-phone';
 import DialogTechnicalPhone from 'components/dialog-technical';
-import TechnicalCommon from 'components/technical-common';
+import TechnicalCommonPhone from 'components/technical-common-phone';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +17,7 @@ import { useParams } from 'react-router-dom';
 import { changeComparePhone1, openCompare } from 'redux/reducer/compare';
 import { RootState } from 'redux/store';
 import { addToCartApi } from 'service/cart.service';
-import { getPhoneApi } from 'service/phone.service';
+import { getProductBySlugApi } from 'service/product.service';
 import { formatNumberWithCommas } from 'utils';
 import { IColors, IPhone, IPrices } from 'utils/interface';
 import './style.scss';
@@ -44,7 +45,7 @@ function PhonePage() {
     useEffect(() => {
         const fetchPhone = async () => {
             if (slug) {
-                const result = await getPhoneApi({ slug: slug });
+                const result = await getProductBySlugApi({ slug: slug });
 
                 setPhone(result);
             }
@@ -179,7 +180,7 @@ function PhonePage() {
                     <div className="mt-2 pt-2 pe-2 mb-2 bg-body-secondary bg-opacity-75 border rounded-3 shadow-sm">
                         <h5 className="text-center text-danger fw-bold">ĐẶC ĐIỂM NỔI BẬT</h5>
                         <ul>
-                            {phone.description.map((item, index) => (
+                            {phone.description?.map((item, index) => (
                                 <li key={index} className="fw-normal">
                                     {item}
                                 </li>
@@ -250,7 +251,7 @@ function PhonePage() {
                     {/* {{! Khung chọn màu }} */}
                     <h6 className="my-2">Chọn màu để xem giá</h6>
                     <div className="options-color mt-1">
-                        {phone.colors.map((color, index) => (
+                        {phone.colors?.map((color, index) => (
                             <Button
                                 key={index}
                                 onClick={() => setPhoneColor(color)}
@@ -290,7 +291,7 @@ function PhonePage() {
                             <span className="ms-2">Khuyến mãi</span>
                         </div>
                         <div className="p-2">
-                            {phone.promotion.map((promotion, i) => (
+                            {phone.promotion?.map((promotion, i) => (
                                 <a
                                     key={i}
                                     href="#"
@@ -336,7 +337,7 @@ function PhonePage() {
                     <div className="mt-4 d-flex flex-column ">
                         <div className="fs-4 fw-medium">Cấu hình Điện thoại {phone.name}</div>
                         <div className="mt-2">
-                            <TechnicalCommon phone={phone} />
+                            <TechnicalCommonPhone phone={phone} />
                         </div>
                         <Button
                             variant="outline-light"

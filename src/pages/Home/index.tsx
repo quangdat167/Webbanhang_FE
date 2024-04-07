@@ -10,12 +10,12 @@ import { useEffect } from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { updatePhoneHome } from 'redux/reducer/home';
+import { updateProductsHome } from 'redux/reducer/home';
 import { RootState } from 'redux/store';
-import { filterPhoneApi } from 'service/phone.service';
+import { filterPhoneApi } from 'service/product.service';
 import { convertStringsToMinMax, getMinPrice, scrollToTop } from 'utils';
 import Config from 'utils/Config';
-import { IPhone } from 'utils/interface';
+import { IProductItem } from 'utils/interface';
 
 const cx = classNames.bind(styles);
 
@@ -53,13 +53,13 @@ function Home() {
             <FilterPhone />
             <SortBy />
             <Row className="g-2" xs={2} md={3} lg={4} xl={5}>
-                {homeState?.phones.length ? (
-                    homeState?.phones?.map((phone: IPhone) => (
+                {homeState?.products.length ? (
+                    homeState?.products?.map((phone: IProductItem) => (
                         <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
                             <Card className="h-100 shadow rounded-3">
                                 <div className="text-center mt-2">
                                     <Link to={`/phones/${phone.slug}`}>
-                                        {phone.colors[0]?.img && (
+                                        {phone.colors && phone.colors[0]?.img && (
                                             <Card.Img
                                                 src={phone?.colors[0]?.img}
                                                 className={cx('card-img-top')}
@@ -77,7 +77,7 @@ function Home() {
                                             {phone.name}
                                         </Card.Title>
                                         <div className="mt-1 d-flex flex-row gap-2 flex-wrap">
-                                            {phone.specifications.map((specification, index) => (
+                                            {phone.specifications?.map((specification, index) => (
                                                 <span
                                                     key={index}
                                                     className={cx(
@@ -132,8 +132,8 @@ function Home() {
                             fetchPhones().then((result: any) => {
                                 if (result) {
                                     dispatch(
-                                        updatePhoneHome({
-                                            phones: [...homeState?.phones, ...result.phones],
+                                        updateProductsHome({
+                                            products: [...homeState?.products, ...result.phones],
                                             totalRemaining: result.totalRemaining,
                                             offset: offsetState + 1,
                                         }),

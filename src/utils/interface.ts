@@ -20,23 +20,34 @@ export interface ITechnicalInfos {
     details: DetailOfTechnicalInfo[];
 }
 
-export interface IPhone {
+export interface IPhone extends IProductItem {
+    prices: IPrices[];
+    technical_infos: ITechnicalInfos[];
+    min_price?: number;
+    colors: IColors[];
+}
+export interface IItem extends IProductItem {
+    technical_infos?: DetailOfTechnicalInfo[];
+    price: number;
+}
+export interface IProductItem {
     _id: string;
     brand: string;
     name: string;
-    prices: IPrices[];
-    specifications: string[];
-    description: string[];
+    prices?: IPrices[];
+    price?: number;
+    specifications?: string[];
+    description?: string[];
     images: string[];
-    promotion: string[];
-    colors: IColors[];
+    promotion?: string[];
+    colors?: IColors[];
     createdAt: Date;
     updatedAt: Date;
     slug: string;
-    information: string;
-    priority: number;
-    technical_infos: ITechnicalInfos[];
-    min_price?: number;
+    information?: string;
+    priority?: number;
+    technical_infos?: ITechnicalInfos[] | DetailOfTechnicalInfo[];
+    type: string;
 }
 
 export interface IProduct {
@@ -74,27 +85,11 @@ export interface IFilter {
     charging_feature: string[];
 }
 
-export interface IItem {
-    _id: string;
-    brand?: string;
-    name: string;
-    price: number;
-    image: string;
-    promotion: string[];
-    colors?: IColors[];
-    createdAt: Date;
-    updatedAt: Date;
-    slug: string;
-    information?: string;
-    technical_infos?: DetailOfTechnicalInfo[];
-    description?: String[];
-}
-
 export interface IHomeState {
-    phones: IPhone[];
+    products: IProductItem[];
     loading: boolean;
     offset: number;
     totalRemaining: number;
     sortby: string;
-    items: IItem[];
+    // items: IItem[];
 }

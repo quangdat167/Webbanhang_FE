@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuSearchResult from 'components/menu-search-result';
 import { useEffect, useState } from 'react';
-import { searchPhoneByNameApi } from 'service/phone.service';
+import { searchPhoneByNameApi } from 'service/product.service';
 import { IPhone } from 'utils/interface';
 import './style.scss';
 
@@ -37,6 +37,7 @@ function InputSearchPhone() {
         } else {
             setShowRecomment(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [keyword]);
 
     return (

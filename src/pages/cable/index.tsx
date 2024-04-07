@@ -1,21 +1,23 @@
 import LayoutItems from 'components/layout-items';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/store';
-import { getCapbleApi } from 'service/items.service';
+import RouteConfig from 'routes/Route';
+import { getProductByTypeApi } from 'service/product.service';
 import Config from 'utils/Config';
 
 function CablePage() {
     const sortbyState = useSelector((state: RootState) => state.homeState?.sortby);
 
     const getCableFunc = async (offset?: number) => {
-        return await getCapbleApi({
+        return await getProductByTypeApi({
             limit: Config.LIMIT_ITEM_PER_PAGE,
             skip: offset ? offset * Config.LIMIT_ITEM_PER_PAGE : 0,
             sortby: sortbyState,
+            type: Config.PRODUCT_TYPE.CAPBLE,
         });
     };
 
-    return <LayoutItems getItemFunc={getCableFunc} />;
+    return <LayoutItems getItemFunc={getCableFunc} pathname={RouteConfig.CAPBLE} />;
 }
 
 export default CablePage;

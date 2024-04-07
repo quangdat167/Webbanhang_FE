@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'react-bootstrap/Image';
-import { getRandomPhoneApi } from 'service/phone.service';
+import { getRandomPhoneApi } from 'service/product.service';
 import { getMinPrice } from 'utils';
-import { IPhone } from 'utils/interface';
+import Config from 'utils/Config';
+import { IPhone, IProductItem } from 'utils/interface';
 function MenuSearchResult({
     items,
     show,
@@ -16,7 +17,7 @@ function MenuSearchResult({
     showRecomment: boolean;
     setShowRecomment: Function;
 }) {
-    const [recomPhone, setRecmPhone] = useState([] as IPhone[]);
+    const [recomPhone, setRecmPhone] = useState([] as IProductItem[]);
 
     const getRandomPhoneFunc = async () => {
         const result = await getRandomPhoneApi({ limit: 3 });
@@ -64,14 +65,22 @@ function MenuSearchResult({
                                 }}
                             >
                                 <Image
-                                    src={phone.colors[0]?.img}
+                                    src={
+                                        phone.type === Config.PRODUCT_TYPE.PHONE && phone.colors
+                                            ? phone.colors[0]?.img
+                                            : phone?.images[0]
+                                    }
                                     alt="img"
                                     rounded
                                     className="image-preview"
                                 />
                                 <div className="main-content">
                                     <div className="name">{phone.name}</div>
-                                    <div className="price">{getMinPrice(phone)}</div>
+                                    <div className="price">
+                                        {phone.type === Config.PRODUCT_TYPE.PHONE
+                                            ? getMinPrice(phone)
+                                            : phone.price}
+                                    </div>
                                 </div>
                             </div>
                         ))}

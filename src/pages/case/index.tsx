@@ -1,21 +1,23 @@
 import LayoutItems from 'components/layout-items';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/store';
-import { getCaseApi } from 'service/items.service';
+import RouteConfig from 'routes/Route';
+import { getProductByTypeApi } from 'service/product.service';
 import Config from 'utils/Config';
 
 function CasePage() {
     const sortbyState = useSelector((state: RootState) => state.homeState?.sortby);
 
     const getCaseFunc = async (offset?: number) => {
-        return await getCaseApi({
+        return await getProductByTypeApi({
             limit: Config.LIMIT_ITEM_PER_PAGE,
             skip: offset ? offset * Config.LIMIT_ITEM_PER_PAGE : 0,
             sortby: sortbyState,
+            type: Config.PRODUCT_TYPE.CASE,
         });
     };
 
-    return <LayoutItems getItemFunc={getCaseFunc} />;
+    return <LayoutItems getItemFunc={getCaseFunc} pathname={RouteConfig.CASE} />;
 }
 
 export default CasePage;

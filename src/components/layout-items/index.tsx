@@ -5,16 +5,14 @@ import SortBy from 'components/sort-by';
 import { useEffect } from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { updateItemsHome } from 'redux/reducer/home';
+import { updateProductsHome } from 'redux/reducer/home';
 import { RootState } from 'redux/store';
-import RouteConfig from 'routes/Route';
 import { convertToVND, scrollToTop } from 'utils';
-import { IItem } from 'utils/interface';
+import { IProductItem } from 'utils/interface';
 
-function LayoutItems({ getItemFunc }: { getItemFunc: Function }) {
+function LayoutItems({ getItemFunc, pathname }: { getItemFunc: Function; pathname: string }) {
     const dispatch = useDispatch();
-    const itemState = useSelector((state: RootState) => state.homeState?.items);
+    const itemState = useSelector((state: RootState) => state.homeState?.products);
     const sortbyState = useSelector((state: RootState) => state.homeState?.sortby);
     const offsetState = useSelector((state: RootState) => state.homeState?.offset);
     const totalRemainingState = useSelector((state: RootState) => state.homeState?.totalRemaining);
@@ -23,8 +21,8 @@ function LayoutItems({ getItemFunc }: { getItemFunc: Function }) {
         getItemFunc().then((result: any) => {
             if (result) {
                 dispatch(
-                    updateItemsHome({
-                        items: result.data,
+                    updateProductsHome({
+                        products: result.data,
                         totalRemaining: result.totalRemaining,
                     }),
                 );
@@ -41,21 +39,21 @@ function LayoutItems({ getItemFunc }: { getItemFunc: Function }) {
             <SortBy />
             <Row className="g-2" xs={2} md={3} lg={4} xl={5}>
                 {itemState?.length ? (
-                    itemState?.map((item: IItem, i) => {
+                    itemState?.map((item: IProductItem, i) => {
                         return (
                             <Col key={item._id} style={{ minWidth: 170, maxWidth: 280 }}>
                                 <Card className="h-100 shadow rounded-3">
                                     <div className="text-center" style={{ minHeight: '5rem' }}>
-                                        <Link to={`${RouteConfig.BACKUPCHARGER}/${item.slug}`}>
+                                        <a href={`${pathname}/${item.slug}`}>
                                             <Card.Img
-                                                src={item?.image}
+                                                src={item?.images[0]}
                                                 className={'pt-4 px-2'}
                                                 style={{ objectFit: 'cover' }}
                                                 alt={item.name}
                                             />
-                                        </Link>
+                                        </a>
                                     </div>
-                                    <Link to={`/backups/${item.slug}`}>
+                                    <a href={`${pathname}/${item.slug}`}>
                                         <Card.Body style={{ minHeight: '10rem' }}>
                                             <Card.Title
                                                 className="fs-6 fw-bold"
@@ -63,32 +61,12 @@ function LayoutItems({ getItemFunc }: { getItemFunc: Function }) {
                                             >
                                                 {item.name}
                                             </Card.Title>
-                                            {/* <div className="mt-1 d-flex flex-row gap-2 flex-wrap">
-					{item.specifications.map((specification, index) => (
-					    <span
-						key={index}
-						className={
-						    'specifications ' +
-						    'badge rounded text-bg-light fw-normal border border-dark-subtle'
-						}
-					    >
-						{specification}
-					    </span>
-					))}
-				    </div> */}
+
                                             <Card.Text className="pt-2 pb-4 text-danger fs-5 fw-bold">
-                                                {convertToVND(item.price)}
+                                                {item.price && convertToVND(item.price)}
                                             </Card.Text>
-                                            {/* {item.promotion?.length && (
-					<p
-					    className="mb-5 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
-					    style={{ color: '#444' }}
-					>
-					    {item.promotion[0]}
-					</p>
-				    )} */}
                                         </Card.Body>
-                                    </Link>
+                                    </a>
 
                                     <div className="position-absolute end-5 bottom-3 v-center text-dark">
                                         <small className="me-1">Yêu thích</small>
@@ -115,8 +93,8 @@ function LayoutItems({ getItemFunc }: { getItemFunc: Function }) {
                             getItemFunc(offsetState + 1).then((result: any) => {
                                 if (result) {
                                     dispatch(
-                                        updateItemsHome({
-                                            items: [...itemState, ...result.data],
+                                        updateProductsHome({
+                                            products: [...itemState, ...result.data],
                                             totalRemaining: result.totalRemaining,
                                             offset: offsetState + 1,
                                         }),

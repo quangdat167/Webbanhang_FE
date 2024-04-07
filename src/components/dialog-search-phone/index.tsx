@@ -1,23 +1,20 @@
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import './style.scss';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useState } from 'react';
-import { getAllPhonesApi } from 'service/phone.service';
-import { IPhone } from 'utils/interface';
 import { Card, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { getMinPrice } from 'utils';
 import { useDispatch } from 'react-redux';
 import { changeComparePhone2 } from 'redux/reducer/compare';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import AddIcon from '@mui/icons-material/Add';
+import { getAllPhonesApi } from 'service/product.service';
+import { getMinPrice } from 'utils';
+import { IPhone } from 'utils/interface';
+import './style.scss';
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(2),
@@ -31,9 +28,7 @@ export default function DialogSearchPhone({ open, setOpen }: { open: boolean; se
     const isTablet = useMediaQuery('(max-width: 1024px)');
 
     const dispatch = useDispatch();
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+
     const handleClose = () => {
         setOpen(false);
     };

@@ -8,10 +8,15 @@ class RouteConfig {
     static ORDER = '/order';
     static PHONES = '/phones';
     static BACKUPCHARGER = '/sac-dp';
-    static ADAPTER = '/adapter';
-    static CAPBLE = '/capble';
+    static ADAPTER = '/cu-sac';
+    static CAPBLE = '/cap-sac';
     static GLASS = '/cuong-luc';
-    static CASE = '/case';
+    static CASE = '/op-lung';
+    static DETAIL_BACKUPCHARGER = '/sac-dp/:slug';
+    static DETAIL_ADAPTER = '/cu-sac/:slug';
+    static DETAIL_CAPBLE = '/cap-sac/:slug';
+    static DETAIL_GLASS = '/cuong-luc/:slug';
+    static DETAIL_CASE = '/op-lung/:slug';
 
     static ADMIN_HOME = '/admin';
     static ADMIN_ADD_PHONE = '/admin/add-phone';

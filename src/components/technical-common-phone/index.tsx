@@ -32,7 +32,7 @@ function createData(name: string, info: string) {
     return { name, info };
 }
 
-export default function TechnicalCommon({ phone }: { phone: IPhone }) {
+export default function TechnicalCommonPhone({ phone }: { phone: IPhone }) {
     const [rows, setRows] = useState<any>([]);
 
     useEffect(() => {

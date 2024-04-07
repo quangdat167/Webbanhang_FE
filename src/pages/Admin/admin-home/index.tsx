@@ -1,14 +1,14 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { getAllPhonesApi } from 'service/phone.service';
+// import { getAllPhonesApi } from 'service/phone.service';
 import { IPhone } from 'utils/interface';
 
 const AdminHome = () => {
     const [phones, setPhones] = useState<IPhone[]>([]);
     useEffect(() => {
         const getPhones = async () => {
-            const result = await getAllPhonesApi();
-            setPhones(result);
+            // const result = await getAllPhonesApi();
+            // setPhones(result);
         };
         getPhones();
     }, []);

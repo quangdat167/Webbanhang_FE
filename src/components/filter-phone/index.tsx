@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CloseIcon from '@mui/icons-material/Close';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -13,9 +14,9 @@ import {
     removeAllItemFilter,
     removeItemFilter,
 } from 'redux/reducer/filter';
-import { updatePhoneHome } from 'redux/reducer/home';
+import { updateProductsHome } from 'redux/reducer/home';
 import { RootState } from 'redux/store';
-import { filterPhoneApi } from 'service/phone.service';
+import { filterPhoneApi } from 'service/product.service';
 import { convertStringsToMinMax, formatNumberWithCommas } from 'utils';
 import Config from 'utils/Config';
 import LayoutFilter from './layout-filter';
@@ -31,7 +32,6 @@ function FilterPhone() {
     const dispatch = useDispatch();
     const filterState = useSelector((state: RootState) => state.filterState);
     const sortbyState = useSelector((state: RootState) => state.homeState?.sortby);
-    const offsetState = useSelector((state: RootState) => state.homeState?.offset);
     const priceState = filterState?.price;
     const brandState = filterState?.brand;
     const typeState = filterState?.type;
@@ -118,8 +118,8 @@ function FilterPhone() {
             const result = await filterPhoneApi({ ...filter });
             if (result) {
                 dispatch(
-                    updatePhoneHome({
-                        phones: result.phones,
+                    updateProductsHome({
+                        products: result.phones,
                         totalRemaining: result.totalRemaining,
                     }),
                 );
