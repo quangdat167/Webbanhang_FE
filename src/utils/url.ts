@@ -1,5 +1,5 @@
 import Axios from 'axios';
-export const ENDPOINT = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api';
+export const ENDPOINT = process.env.REACT_APP_API_BASE_URL || 'ht/apitp://localhost:8080/api';
 
 export const POST: any = (data: { baseURL?: string; url: string; params: any }) => {
     return new Promise((resolve, reject) => {

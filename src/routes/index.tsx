@@ -6,6 +6,7 @@ import LayoutAdmin from 'components/Layout/LayoutAdmin';
 import AdminAddPhone from 'pages/Admin/admin-add-phone';
 import AdminHome from 'pages/Admin/admin-home';
 import AdminManageOrder from 'pages/Admin/admin-manage-order';
+import ManageFrequentProduct from 'pages/Admin/manage-frequent';
 import Cart from 'pages/Cart';
 import Home from 'pages/Home';
 import Order from 'pages/Order';
@@ -32,6 +33,7 @@ interface RouterConfig {
 }
 
 const publicRoutes: RouterConfig[] = [
+    { path: '/', component: Home, layout: DefaultLayout },
     { path: RouteConfig.PHONES, component: Home, layout: DefaultLayout },
     { path: RouteConfig.BACKUPCHARGER, component: BackupChargerPage, layout: DefaultLayout },
     { path: RouteConfig.ADAPTER, component: AdapterPage, layout: DefaultLayout },
@@ -64,10 +66,10 @@ const publicRoutes: RouterConfig[] = [
         layout: DefaultLayout,
     },
     // { path: '/phone', component: PhonePage, layout: DefaultLayout },
-    { path: '/phones/:slug', component: PhonePage, layout: DefaultLayout },
-    { path: '/sign-up', component: SignUp, layout: HeaderOnly },
-    { path: '/sign-in', component: SignIn, layout: HeaderOnly },
-    { path: '/cart', component: Cart, layout: DefaultLayout },
+    { path: RouteConfig.DETAIL_PHONE, component: PhonePage, layout: DefaultLayout },
+    { path: RouteConfig.SIGN_UP, component: SignUp, layout: HeaderOnly },
+    { path: RouteConfig.SIGN_IN, component: SignIn, layout: HeaderOnly },
+    { path: RouteConfig.CART, component: Cart, layout: DefaultLayout },
     { path: RouteConfig.CONFIRM_INFO, component: ConfirmInfo, layout: DefaultLayout },
     { path: RouteConfig.ORDER, component: Order, layout: DefaultLayout },
 ];
@@ -86,6 +88,11 @@ const privateRoutes: RouterConfig[] = [
     {
         path: RouteConfig.ADMIN_MANAGE_ORDER,
         component: AdminManageOrder,
+        layout: LayoutAdmin,
+    },
+    {
+        path: RouteConfig.ADMIN_MANAGE_FREQUENT_PRODUCT,
+        component: ManageFrequentProduct,
         layout: LayoutAdmin,
     },
 ];

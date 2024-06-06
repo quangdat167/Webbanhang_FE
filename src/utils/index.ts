@@ -3,15 +3,13 @@ import { IPhone } from './interface';
 export function getMinPrice(phone: any) {
     const prices = phone?.prices?.map((priceObject: any) => priceObject.price);
 
-    if (prices?.length === 0) {
-        return undefined; // No prices available
-    }
-
-    const minPrice = formatNumberWithCommas(Math.min(...prices));
-    return minPrice;
+    if (prices?.length) {
+        const minPrice = formatNumberWithCommas(Math.min(...prices));
+        return minPrice;
+    } else return undefined; // No prices available
 }
 
-export function convertToVND(number: number) {
+export function convertToVND(number: any) {
     const price = formatNumberWithCommas(number);
     return price;
 }

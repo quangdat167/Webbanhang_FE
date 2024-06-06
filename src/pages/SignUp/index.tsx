@@ -17,9 +17,8 @@ import Config from 'utils/Config';
 function SignUp() {
     const dispatch = useDispatch();
     const userInfo = useSelector((state: RootState) => state.userInfoState);
-    const textWarningPass: string =
-        'Password must have more than 8 characters, at least 1 lowercase letter, 1 uppercase letter, 1 number';
-    const stringEmtpy: string = 'Please enter this field';
+    const textWarningPass: string = 'Mật khẩu phải chứa ít nhất 6 ký tự';
+    const stringEmtpy: string = 'Vui lòng nhập trường này';
 
     const [loading, setLoading] = useState<Boolean>(false);
 
@@ -83,15 +82,9 @@ function SignUp() {
                 setIsValidPassword(false);
                 return;
             }
-            if (
-                validator.isStrongPassword(password, {
-                    minLength: 8,
-                    minLowercase: 1,
-                    minUppercase: 1,
-                    minNumbers: 1,
-                    minSymbols: 0,
-                }) === false
-            ) {
+            if (password.length < 6) {
+                console.log('password', password);
+
                 setIsBorderNonePassword(false);
                 setIsValidPassword(false);
             } else {
@@ -117,7 +110,7 @@ function SignUp() {
                 return;
             }
             if (password !== passwordConfirm) {
-                const stringFalsePass = 'Confirm password is incorrect';
+                const stringFalsePass = 'Mật khẩu không trùng khớp';
                 inputPasswordConfirm.current.innerText = stringFalsePass;
                 setIsBorderNonePasswordConfirm(false);
                 setIsValidPasswordConfirm(false);
@@ -140,7 +133,7 @@ function SignUp() {
     useEffect(() => {
         if (passwordConfirm) {
             if (password !== passwordConfirm) {
-                const stringFalsePass = 'Confirm password is incorrect';
+                const stringFalsePass = 'Mật khẩu không trùng khớp';
                 inputPasswordConfirm.current!.innerText = stringFalsePass;
                 setIsBorderNonePasswordConfirm(false);
                 setIsValidPasswordConfirm(false);
@@ -198,7 +191,8 @@ function SignUp() {
                         email,
                     });
                     dispatch(loginReducer(user));
-                    window.location.reload();
+                    // window.location.reload();
+                    window.open(RouteConfig.HOME);
                 })
                 .catch((error) => {
                     alert('Sign up failed');
@@ -210,7 +204,7 @@ function SignUp() {
 
     return !userInfo?.email ? (
         <div className="mx-auto px-2" style={{ maxWidth: '30rem', marginTop: 100 }}>
-            <h2 className="text-center">Sign Up</h2>
+            <h2 className="text-center">Đăng ký</h2>
             <Form className="mt-5 d-flex flex-column" ref={formRef} onSubmit={handleSubmitForm}>
                 <Form.Group as={Row} className="mb-3" controlId="formGroupUsername">
                     <Col>
@@ -306,13 +300,13 @@ function SignUp() {
                     {loading ? (
                         <Spinner animation="border" variant="light" className="fs-5" />
                     ) : (
-                        <span>Sign up</span>
+                        <span>Đăng ký</span>
                     )}
                 </Button>
                 <div className="my-3 d-flex justify-content-center">
-                    <p>Already a member?</p>
+                    <p>Bạn đã có tài khoản?</p>
                     <Link to={RouteConfig.SIGN_IN} className="ms-2 text-danger">
-                        Login
+                        Đăng nhập
                     </Link>
                 </div>
             </Form>

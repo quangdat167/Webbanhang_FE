@@ -1,3 +1,8 @@
+import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import HomeIcon from '@mui/icons-material/Home';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -6,17 +11,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import RouteConfig from 'routes/Route';
 import { useEffect, useState } from 'react';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import HomeIcon from '@mui/icons-material/Home';
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
-import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import RouteConfig from 'routes/Route';
 const drawerWidth = 240;
 
 const listItem = [
@@ -44,6 +40,11 @@ const listItem = [
         icon: <ControlPointIcon />,
         text: 'Thêm điện thoại mới',
         route: RouteConfig.ADMIN_ADD_PHONE,
+    },
+    {
+        icon: <AutoAwesomeMotionIcon />,
+        text: 'Sản phẩm mua kèm',
+        route: RouteConfig.ADMIN_MANAGE_FREQUENT_PRODUCT,
     },
 ];
 

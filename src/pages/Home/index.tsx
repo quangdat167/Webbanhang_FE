@@ -58,7 +58,7 @@ function Home() {
                         <Col key={phone._id} style={{ minWidth: 170, maxWidth: 280 }}>
                             <Card className="h-100 shadow rounded-3">
                                 <div className="text-center mt-2">
-                                    <Link to={`/phones/${phone.slug}`}>
+                                    <Link to={`/${phone.type}/${phone.slug}`}>
                                         {phone.colors && phone.colors[0]?.img && (
                                             <Card.Img
                                                 src={phone?.colors[0]?.img}
@@ -68,7 +68,7 @@ function Home() {
                                         )}
                                     </Link>
                                 </div>
-                                <Link to={`/phones/${phone.slug}`}>
+                                <Link to={`/${phone.type}/${phone.slug}`}>
                                     <Card.Body style={{ minHeight: '18rem' }}>
                                         <Card.Title
                                             className="fs-6 fw-bold"

@@ -10,17 +10,22 @@ import ButtonBuy from 'components/ButtonBuy/buttonBuy';
 import ComparePhone from 'components/compare-phone';
 import DialogTechnicalPhone from 'components/dialog-technical';
 import TechnicalCommonPhone from 'components/technical-common-phone';
+import { PopupSignIn } from 'pages/SignIn';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
+import { Button, Card, Carousel, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { changeComparePhone1, openCompare } from 'redux/reducer/compare';
+import { pushSnackbar } from 'redux/reducer/snackbar';
 import { RootState } from 'redux/store';
 import { addToCartApi } from 'service/cart.service';
-import { getProductBySlugApi } from 'service/product.service';
-import { formatNumberWithCommas } from 'utils';
-import { IColors, IPhone, IPrices } from 'utils/interface';
+import { getFrequentProductsApi, getProductBySlugApi } from 'service/product.service';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { convertToVND, formatNumberWithCommas } from 'utils';
+import { IColors, IFrequentProducts, IPhone, IPrices, IProductItem } from 'utils/interface';
 import './style.scss';
+
 function PhonePage() {
     const isTablet = useMediaQuery('(max-width: 1024px)');
     const userInfo = useSelector((state: RootState) => state.userInfoState);
@@ -29,6 +34,7 @@ function PhonePage() {
     const carts = useSelector((state: RootState) => state.cart);
     const dispatch = useDispatch();
     const [phone, setPhone] = useState<IPhone | null>(null);
+    const [frequentProducts, setFrequentProducts] = useState({} as IFrequentProducts);
     const { slug } = useParams<{ slug: string }>();
     const [indexCarousel, setIndexCarousel] = useState<number>(0);
     const [phonePrice, setPhonePrice] = useState<IPrices>({} as IPrices);
@@ -37,6 +43,7 @@ function PhonePage() {
     const [widthColLeft, setWidthColLeft] = useState(0);
     const [showBtnShowMore, setShowBtnShowMore] = useState(true);
     const [showMoreDetail, setShowMoreDetail] = useState(false);
+    const [openPopupSignIn, setOpenPopupSignIn] = useState(false);
 
     // useEffect(() => {
     //     scrollToTop();
@@ -50,6 +57,7 @@ function PhonePage() {
                 setPhone(result);
             }
         };
+
         fetchPhone();
     }, [slug]);
 
@@ -57,6 +65,13 @@ function PhonePage() {
         if (phone) {
             setPhonePrice(phone.prices[phone.prices.length - 1]);
             setPhoneColor(phone.colors[0]);
+            if (phone.type === 'phone') {
+                const getFrequentProducts = async () => {
+                    const result = await getFrequentProductsApi({ productId: phone._id });
+                    setFrequentProducts(result);
+                };
+                getFrequentProducts();
+            }
         }
     }, [phone]);
 
@@ -94,11 +109,37 @@ function PhonePage() {
         if (userInfo.email) {
             await addToCartApi({
                 userId: userInfo._id,
-                phoneId: phone._id,
+                productId: phone._id,
                 color: phoneColor.color,
                 quantity: 1,
                 type: phonePrice.type,
             });
+            dispatch(
+                pushSnackbar({
+                    content: 'Thêm vào giỏ hàng thành công',
+                }),
+            );
+        } else {
+            setOpenPopupSignIn(true);
+        }
+        // dispatch(addToCart(phoneAddToCart));
+    };
+
+    const handleAddItemsToCart = async ({ product }: { product: IProductItem }) => {
+        if (userInfo.email) {
+            await addToCartApi({
+                userId: userInfo._id,
+                productId: product._id,
+                color: product.colors?.length ? product.colors[0].color : undefined,
+                quantity: 1,
+            });
+            dispatch(
+                pushSnackbar({
+                    content: 'Thêm vào giỏ hàng thành công',
+                }),
+            );
+        } else {
+            setOpenPopupSignIn(true);
         }
         // dispatch(addToCart(phoneAddToCart));
     };
@@ -187,6 +228,111 @@ function PhonePage() {
                             ))}
                         </ul>
                     </div>
+
+                    {/* {{! Sản phẩm thường mua kèm }} */}
+                    {frequentProducts?._id ? (
+                        <>
+                            <div className="fs-5 fw-medium mt-3">Phụ kiện mua cùng</div>
+
+                            <Swiper
+                                slidesPerView={3}
+                                spaceBetween={15}
+                                loop={true}
+                                // pagination={{
+                                //     clickable: true,
+                                // }}
+                                autoplay={{
+                                    delay: 2500,
+                                    disableOnInteraction: false,
+                                }}
+                                navigation={true}
+                                modules={[Autoplay, Pagination, Navigation]}
+                                className="p-2"
+                                style={{ userSelect: 'none' }}
+                            >
+                                {frequentProducts?.frequentItems.map((frequentItem, index) => {
+                                    const itemDetail = frequentItem.itemDetails;
+                                    return (
+                                        <>
+                                            <SwiperSlide key={index}>
+                                                <Card
+                                                    className="h-100 shadow rounded-3"
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                        window.open(
+                                                            `/${itemDetail.type}/${itemDetail.slug}`,
+                                                            '_blank',
+                                                        );
+                                                    }}
+                                                >
+                                                    <div className="text-center mt-2">
+                                                        <div className="center">
+                                                            <Card.Img
+                                                                src={itemDetail.images[0]}
+                                                                alt={itemDetail.name}
+                                                                className="mt-2"
+                                                                style={{ width: 160, height: 160 }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <Card.Body>
+                                                            <Card.Title
+                                                                className="fs-6 fw-bold"
+                                                                style={{
+                                                                    height: '6rem',
+                                                                    color: '#444',
+                                                                }}
+                                                            >
+                                                                {itemDetail.name}
+                                                            </Card.Title>
+
+                                                            <Card.Text className="mt-2 text-danger fs-5 fw-bold">
+                                                                {convertToVND(itemDetail.price)}
+                                                            </Card.Text>
+                                                        </Card.Body>
+                                                        {/* <Card.Footer> */}
+                                                        <div className="p-2">
+                                                            <Button
+                                                                variant="outline-danger"
+                                                                className=" w-100 h-100 center gap-2 "
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    handleAddItemsToCart({
+                                                                        product: itemDetail,
+                                                                    });
+                                                                }}
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    className="mt-1 fs-5"
+                                                                    icon={faCartPlus}
+                                                                />
+
+                                                                <p className="mt-1 fs-12 mb-0">
+                                                                    {' '}
+                                                                    Thêm vào giỏ
+                                                                </p>
+                                                            </Button>
+                                                        </div>
+                                                        {/* </Card.Footer> */}
+                                                    </div>
+
+                                                    {/* <Card.Footer className=" text-center">
+                                        <Link to={`/phones/${phone._id}/edit`} className="btn btn-primary ">
+                                            Thêm vào giỏ hàng
+                                        </Link>
+                                    </Card.Footer> */}
+                                                </Card>
+                                            </SwiperSlide>
+                                        </>
+                                    );
+                                })}
+                            </Swiper>
+                        </>
+                    ) : (
+                        <></>
+                    )}
                     {!isTablet && (
                         <div
                             className="more-info mt-4 p-3 shadow border rounded-3 overflow-hidden"
@@ -387,6 +533,7 @@ function PhonePage() {
                 open={openDialogTechnical}
                 setOpen={setOpenDialogTechnical}
             />
+            <PopupSignIn open={openPopupSignIn} setOpen={setOpenPopupSignIn} />
         </Container>
     );
 }

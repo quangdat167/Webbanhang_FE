@@ -68,3 +68,12 @@ export const getProductBySlugApi = (args: { slug: string }) => {
         return data;
     });
 };
+
+export const getFrequentProductsApi = (args: { productId: string }) => {
+    return POST({
+        url: APIConfig.GET_FREQUENT_PRODUCTS,
+        params: args,
+    }).then((data: any) => {
+        return data;
+    });
+};

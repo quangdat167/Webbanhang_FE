@@ -52,9 +52,9 @@ export interface IProductItem {
 
 export interface IProduct {
     _id?: string;
-    phoneId: string;
-    color: string;
-    type: string;
+    productId: string;
+    color?: string;
+    type?: string;
     quantity: number;
     productInfo?: IPhone;
     price?: number;
@@ -92,4 +92,17 @@ export interface IHomeState {
     totalRemaining: number;
     sortby: string;
     // items: IItem[];
+}
+
+interface IFrequentItems {
+    itemId: string;
+    support: number;
+    itemDetails: IProductItem;
+}
+
+export interface IFrequentProducts {
+    _id: string;
+    productId: string;
+    productInfo?: IPhone;
+    frequentItems: IFrequentItems[];
 }

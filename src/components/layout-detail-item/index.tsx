@@ -179,7 +179,7 @@ function LayoutDetailItem({ item }: { item: IItem }) {
                     <p className="card-text text-danger fs-5 fw-bold">{convertToVND(item.price)}</p>
 
                     {/* {{! Khung chọn màu }} */}
-                    {item.colors?.length && (
+                    {item.colors?.length ? (
                         <>
                             <h6 className="my-2">Chọn màu</h6>
                             <div className="options-color mt-1">
@@ -216,6 +216,8 @@ function LayoutDetailItem({ item }: { item: IItem }) {
                                 ))}
                             </div>
                         </>
+                    ) : (
+                        <></>
                     )}
 
                     {/* {{! Khung khuyến mãi }} */}

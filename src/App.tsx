@@ -24,9 +24,13 @@ function App() {
     const snackbarState = useSelector((state: RootState) => state.snackbarState);
     useEffect(() => {
         const unregisterAuthObserver = auth.onAuthStateChanged(async (user) => {
+            console.log('user: ', user);
+
             setIsSignedIn(!!user);
             if (user?.email && !userInfoState?.email) {
                 const userInfo = await getUserInfoApi({ email: user?.email });
+                console.log('userInfo: ', userInfo);
+
                 if (userInfo?.email) {
                     dispatch(getUserInfoReducer(userInfo));
                 }
@@ -112,13 +116,15 @@ function App() {
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                     open={snackbarState.open}
-                    autoHideDuration={5000}
+                    autoHideDuration={4000}
                     onClose={handleClose}
+                    style={{ top: 80 }}
                 >
                     <Alert
                         onClose={handleClose}
                         severity={snackbarState.severity ?? 'success'}
                         sx={{ width: '100%' }}
+                        variant="filled"
                     >
                         {snackbarState.content}
                     </Alert>

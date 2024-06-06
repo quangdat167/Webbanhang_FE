@@ -74,4 +74,8 @@
             color: var(--primary) !important;
         }
     }
+    .swiper-button-prev,
+    .swiper-button-next {
+        color: var(--primary);
+    }
 }

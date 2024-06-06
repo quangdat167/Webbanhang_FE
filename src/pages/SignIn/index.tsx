@@ -1,14 +1,17 @@
+import CloseIcon from '@mui/icons-material/Close';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { RootState } from 'redux/store';
 import RouteConfig from 'routes/Route';
 import Config from 'utils/Config';
 import validator from 'validator';
 import { auth } from '../../firebaseConfig/firebase';
-
 function SignIn() {
     const userInfo = useSelector((state: RootState) => state.userInfoState);
 
@@ -72,7 +75,7 @@ function SignIn() {
         setisBorderNonePassword(true);
     };
 
-    const handleSubmitForm = async (e: React.FormEvent) => {
+    const handleSubmitForm = async (e: FormEvent) => {
         e.preventDefault();
         handleCheckValidUsername();
         handleCheckValidPassword();
@@ -95,15 +98,26 @@ function SignIn() {
             }
         }
     };
+    useEffect(() => {
+        if (userInfo?.email) {
+            if (window.location.pathname !== RouteConfig.SIGN_IN) {
+                window.location.reload();
+            } else {
+                userInfo.role === Config.USER_ROLE_ADMIN
+                    ? window.open(RouteConfig.ADMIN_HOME, '_self')
+                    : window.open(RouteConfig.HOME, '_self');
+            }
+        }
+    }, [userInfo?.email]);
 
-    return !userInfo?.email ? (
-        <div className="mx-auto px-2" style={{ maxWidth: '30rem', marginTop: 100 }}>
-            <h2 className="text-center">Sign In</h2>
+    return (
+        <div className="mx-auto px-2 mt-4" style={{ maxWidth: '30rem' }}>
+            <h2 className="text-center">Đăng nhập</h2>
             <Form className="mt-3 d-flex flex-column" ref={formRef} onSubmit={handleSubmitForm}>
                 <Form.Group className="mb-3" controlId="formBasicUserName">
                     <Form.Control
                         type="text"
-                        placeholder="Enter email"
+                        placeholder="Email"
                         name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -121,7 +135,7 @@ function SignIn() {
                     <div className="position-relative">
                         <Form.Control
                             type="password"
-                            placeholder="Password"
+                            placeholder="Mật khẩu"
                             name="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -138,7 +152,7 @@ function SignIn() {
 
                 <div className="small mb-2 d-flex justify-content-end">
                     <a href={RouteConfig.FORGOT_PASSWORD} className="text-reset">
-                        Forgot your password?
+                        Quên mật khẩu?
                     </a>
                 </div>
 
@@ -150,24 +164,46 @@ function SignIn() {
                     {loading ? (
                         <Spinner animation="border" variant="light" className="fs-5" />
                     ) : (
-                        <span>Sign In</span>
+                        <span>Đăng nhập</span>
                     )}
                 </Button>
                 <div className="my-4 d-flex justify-content-center">
-                    <p>Not have account?</p>
+                    <p>Bạn chưa có tài khoản?</p>
                     <Link to={RouteConfig.SIGN_UP} className="ms-2 text-danger">
-                        Sign up now!
+                        Đăng ký ngay!
                     </Link>
                 </div>
             </Form>
         </div>
-    ) : (
-        <Navigate
-            to={
-                userInfo.role === Config.USER_ROLE_ADMIN ? RouteConfig.ADMIN_HOME : RouteConfig.HOME
-            }
-        />
     );
 }
+
+export const PopupSignIn = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <>
+            <Dialog fullWidth open={open} onClose={handleClose}>
+                <IconButton
+                    aria-label="close"
+                    onClick={handleClose}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <DialogContent>
+                    <SignIn />
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
 
 export default SignIn;

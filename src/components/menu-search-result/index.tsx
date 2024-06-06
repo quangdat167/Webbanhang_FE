@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'react-bootstrap/Image';
 import { getRandomPhoneApi } from 'service/product.service';
-import { getMinPrice } from 'utils';
+import { convertToVND, getMinPrice } from 'utils';
 import Config from 'utils/Config';
 import { IPhone, IProductItem } from 'utils/interface';
 function MenuSearchResult({
@@ -42,14 +42,22 @@ function MenuSearchResult({
                             }}
                         >
                             <Image
-                                src={phone.colors[0]?.img}
+                                src={
+                                    phone.type === Config.PRODUCT_TYPE.PHONE && phone.colors
+                                        ? phone.colors[0]?.img
+                                        : phone?.images[0]
+                                }
                                 alt="img"
                                 rounded
                                 className="image-preview"
                             />
                             <div className="main-content">
                                 <div className="name">{phone.name}</div>
-                                <div className="price">{getMinPrice(phone)}</div>
+                                <div className="price">
+                                    {phone.type === Config.PRODUCT_TYPE.PHONE
+                                        ? getMinPrice(phone)
+                                        : convertToVND(phone.price)}
+                                </div>
                             </div>
                         </div>
                     ))
@@ -57,12 +65,14 @@ function MenuSearchResult({
                     <div className="recoment-wrapper">
                         <div className="recoment-title">Đề xuất</div>
                         {recomPhone.map((phone, index) => (
-                            <div
+                            <a
                                 key={index}
                                 className="item-phone-search"
-                                onClick={() => {
-                                    window.open(`/phones/${phone.slug}`, '_self');
-                                }}
+                                // onClick={() => {
+                                //     window.open(`/${phone.type}/${phone.slug}`, '_self');
+                                // }}
+                                href={`/${phone.type}/${phone.slug}`}
+                                style={{ color: '#222' }}
                             >
                                 <Image
                                     src={
@@ -79,10 +89,10 @@ function MenuSearchResult({
                                     <div className="price">
                                         {phone.type === Config.PRODUCT_TYPE.PHONE
                                             ? getMinPrice(phone)
-                                            : phone.price}
+                                            : convertToVND(phone.price)}
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         ))}
                     </div>
                 )}

@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { RootState } from 'redux/store';
 import RouteConfig from 'routes/Route';
 import Config from 'utils/Config';
+import Logo from '../../../images/logo_1.png';
 import './styles.scss';
 
 function Header() {
@@ -26,7 +27,7 @@ function Header() {
                 style={{ backgroundColor: 'var(--primary)', padding: 8, height: 64 }}
             >
                 <div className={'center justify-content-between w-100 flex-nowrap'}>
-                    <div className="d-flex text-light gap-2">
+                    <div className="d-flex gap-2">
                         <Link
                             className="navbar-brand text-light"
                             to={
@@ -35,30 +36,31 @@ function Header() {
                                     : RouteConfig.HOME
                             }
                         >
-                            Quang Đạt
+                            <img src={Logo} alt="logo" style={{ height: '60px' }} />
                         </Link>
+                        <div className="center text-light gap-2">
+                            <a href={RouteConfig.PHONES} className="item-link-phone">
+                                <PhoneIphoneIcon fontSize="small" />
+                                <div>Điện thoại</div>
+                            </a>
+                            <div
+                                className="item-link-phone"
+                                onMouseEnter={() => {
+                                    setShowMenuAccessories(true);
+                                }}
+                                onMouseLeave={() => {
+                                    setShowMenuAccessories(false);
+                                }}
+                            >
+                                <HeadsetIcon fontSize="small" />
+                                <div>Phụ kiện</div>
+                                <ArrowDropDownIcon fontSize="small" />
 
-                        <a href={RouteConfig.PHONES} className="item-link-phone">
-                            <PhoneIphoneIcon fontSize="small" />
-                            <div>Điện thoại</div>
-                        </a>
-                        <div
-                            className="item-link-phone"
-                            onMouseEnter={() => {
-                                setShowMenuAccessories(true);
-                            }}
-                            onMouseLeave={() => {
-                                setShowMenuAccessories(false);
-                            }}
-                        >
-                            <HeadsetIcon fontSize="small" />
-                            <div>Phụ kiện</div>
-                            <ArrowDropDownIcon fontSize="small" />
-
-                            <MenuAccessories
-                                show={showMenuAccessories}
-                                setShow={setShowMenuAccessories}
-                            />
+                                <MenuAccessories
+                                    show={showMenuAccessories}
+                                    setShow={setShowMenuAccessories}
+                                />
+                            </div>
                         </div>
                     </div>
 
