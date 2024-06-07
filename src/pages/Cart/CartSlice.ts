@@ -13,7 +13,7 @@ export const cartSlice = createSlice({
             return newState;
         },
         deleteFromCart: (state, action) => {
-            const index = state.products.findIndex((prod) => prod.phoneId === action.payload);
+            const index = state.products.findIndex((prod) => prod.productId === action.payload);
             if (index > -1) state.products.splice(index, 1);
         },
         // loadCard: (state, action: PayloadAction<ICartItem[]>) => {
@@ -24,4 +24,4 @@ export const cartSlice = createSlice({
 
 export const { addToCart, deleteFromCart } = cartSlice.actions;
 
-export default cartSlice.reducer;
+export const CartReducer = cartSlice.reducer;

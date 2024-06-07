@@ -68,3 +68,9 @@ export function convertStringsToMinMax(arr: string[]) {
         return [min, max];
     } else return [];
 }
+
+export function generateUniqueOrderCode() {
+    const timestamp = Date.now(); // Số mili giây kể từ 1970-01-01
+    const randomNum = Math.floor(Math.random() * 1000); // Số ngẫu nhiên từ 0 đến 9999
+    return parseInt(`${timestamp}${randomNum}`, 10); // Kết hợp timestamp và số ngẫu nhiên
+}

@@ -4,10 +4,10 @@ import { GET, POST } from 'utils/url';
 
 export const addToCartApi = async (args: {
     userId: string;
-    phoneId: string;
-    color: string;
+    productId: string;
+    color?: string;
     quantity: number;
-    type: string;
+    type?: string;
 }) => {
     return await POST({
         url: APIConfig.ADD_TO_CART,

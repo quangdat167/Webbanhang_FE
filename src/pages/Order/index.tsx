@@ -6,6 +6,7 @@ import { RootState } from 'redux/store';
 import { deleteItemFromCart } from 'service/cart.service';
 import { formatNumberWithCommas } from 'utils';
 // import { addToCart, deleteFromCart } from './CartSlice';
+import moment from 'moment';
 import { addOrders } from 'redux/reducer/order';
 import { getAllOrdersApi } from 'service/order.service';
 import './style.scss';
@@ -80,7 +81,7 @@ function Order() {
                                                 alt="anh"
                                                 style={{ width: 160, height: 160 }}
                                             ></Image>
-                                            <div className="ms-3 w-100">
+                                            <div className="ms-5 w-100">
                                                 <Link
                                                     to={`phone/${cart?.productInfo?.slug}`}
                                                     className="mb-2 text-dark fw-bolder hover-underline"
@@ -104,12 +105,25 @@ function Order() {
                                 );
                             })}
 
-                            <div className="mt-3">
-                                <div className="d-flex justify-content-end">
+                            <div className="mt-4">
+                                {order.orderCode ? (
+                                    <div className="d-flex justify-content-start">
+                                        <div>Mã đơn hàng: {order.orderCode}</div>
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+                                <div className="d-flex justify-content-start">
+                                    <div>
+                                        Ngày đặt hàng:{' '}
+                                        {moment(order.createdAt).format(' HH:mm:ss DD-MM-YYYY')}
+                                    </div>
+                                </div>
+                                <div className="d-flex justify-content-start">
                                     <div>Trạng thái: {order.status}</div>
                                 </div>
-                                <div className="d-flex justify-content-end fw-medium text-root">
-                                    Tông tiền: {totalPrice}
+                                <div className="d-flex justify-content-start fw-medium text-root">
+                                    Tổng tiền: {totalPrice}
                                 </div>
                             </div>
 

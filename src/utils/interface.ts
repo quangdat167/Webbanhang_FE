@@ -74,6 +74,7 @@ export interface IOrder {
     totalPrice: number;
     userInfo?: IUserInfo;
     createdAt?: Date;
+    orderCode?: number;
 }
 
 export interface IFilter {

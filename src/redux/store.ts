@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import cartReducer from '../pages/Cart/CartSlice';
+import { CartReducer } from 'pages/Cart/CartSlice';
+import { purchaseReducer } from 'pages/Cart/purchaseSlice';
 import { compareReducer } from './reducer/compare';
 import { FilterReducer } from './reducer/filter';
 import { HomeReducer } from './reducer/home';
@@ -11,7 +12,8 @@ const store = configureStore({
     reducer: {
         homeState: HomeReducer,
         userInfoState: UserInfoReducer,
-        cart: cartReducer,
+        cart: CartReducer,
+        purchaseState: purchaseReducer,
         snackbarState: snackbarReducer,
         orderState: OrderReducer,
         compareState: compareReducer,

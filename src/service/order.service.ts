@@ -2,7 +2,11 @@ import APIConfig from 'utils/APIConfig';
 import { IProduct } from 'utils/interface';
 import { POST } from 'utils/url';
 
-export const createOrderApi = async (args: { userId: string; products: IProduct[] }) => {
+export const createOrderApi = async (args: {
+    userId: string;
+    products: IProduct[];
+    orderCode: number;
+}) => {
     return await POST({
         url: APIConfig.CREATE_ORDER,
         params: args,

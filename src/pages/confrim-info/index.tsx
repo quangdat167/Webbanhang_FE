@@ -1,18 +1,20 @@
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import { useEffect, useState } from 'react';
 import { Button, Form, Image, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { pushSnackbar } from 'redux/reducer/snackbar';
 import { RootState } from 'redux/store';
-import RouteConfig from 'routes/Route';
 import { changUserInfoApi } from 'service/authen.service';
 import { createOrderApi } from 'service/order.service';
-import { formatNumberWithCommas } from 'utils';
+import { getPaymentLinkApi } from 'service/payment.service';
+import { formatNumberWithCommas, generateUniqueOrderCode } from 'utils';
 import { IProduct } from 'utils/interface';
 
 function ConfirmInfo() {
     const dispatch = useDispatch();
     const userInfo = useSelector((state: RootState) => state.userInfoState);
-    const productsCart = useSelector((state: RootState) => state.cart.products);
+    const purchaseState = useSelector((state: RootState) => state.purchaseState);
     const [phone, setPhone] = useState(userInfo.phone);
     const [address, setAddress] = useState(userInfo.address);
     const [loading, setLoading] = useState<Boolean>(false);
@@ -43,47 +45,54 @@ function ConfirmInfo() {
 
     const createOrderFunc = async () => {
         let productSend: IProduct[] = [];
-        productsCart.forEach((prod) =>
+        purchaseState.forEach((prod) =>
             productSend.push({
-                phoneId: prod.phoneId,
-                color: prod.color,
+                productId: prod.productId,
+                color: prod.color ? prod.color : undefined,
                 quantity: prod.quantity,
-                type: prod.type,
+                type: prod.type ? prod.type : undefined,
                 price: prod.productInfo?.prices.find((price) => price.type === prod.type)?.price,
             }),
         );
+        const orderCode = generateUniqueOrderCode();
 
-        await createOrderApi({
+        const result = await createOrderApi({
             userId: userInfo._id,
+            orderCode,
             products: productSend,
         });
+        if (result) {
+        }
+        const link = await getPaymentLinkApi({ orderId: orderCode });
+        if (link) {
+            window.open(link, '_self');
+        }
 
-        setTimeout(() => {
-            window.open(RouteConfig.ORDER, '_self');
-        }, 3000);
+        // setTimeout(() => {
+        //     window.open(RouteConfig.ORDER, '_self');
+        // }, 3000);
     };
 
     const handleSubmitForm = (e: any) => {
         e.preventDefault();
+        setLoading(true);
         changeUserInfoFunc();
-        dispatch(
-            pushSnackbar({
-                content: 'Đặt hàng thành công',
-            }),
-        );
+        // dispatch(
+        //     pushSnackbar({
+        //         content: 'Đặt hàng thành công',
+        //     }),
+        // );
         createOrderFunc();
+        setLoading(false);
     };
 
     useEffect(() => {
-        if (productsCart?.length) {
-            console.log(2);
-            console.log('productsCart: ', productsCart);
-
+        if (purchaseState?.length) {
             setTotalPrice(
                 formatNumberWithCommas(
-                    productsCart.reduce((value, prod) => {
+                    purchaseState.reduce((value, prod) => {
                         let totalPrice = 0;
-                        prod.productInfo?.prices.forEach((price) => {
+                        prod.productInfo?.prices?.forEach((price) => {
                             if (price.type === prod.type) {
                                 totalPrice = prod.quantity * price.price;
                             }
@@ -94,9 +103,7 @@ function ConfirmInfo() {
                 ),
             );
         }
-    }, [productsCart]);
-
-    console.log('Total: ', totalPrice);
+    }, [purchaseState]);
 
     return (
         <div className="mx-auto px-2" style={{ maxWidth: '30rem', marginTop: 100 }}>
@@ -124,7 +131,7 @@ function ConfirmInfo() {
                 </Form.Group>
 
                 <div className="my-3 ">
-                    {productsCart?.map((cart, index) => {
+                    {purchaseState?.map((cart, index) => {
                         const imageShow = cart.productInfo?.colors?.find(
                             (color) => color.color === cart.color,
                         )?.img;
@@ -174,15 +181,31 @@ function ConfirmInfo() {
                     <hr />
                 </div>
 
+                <div>
+                    <div className="fw-bolder">Chọn phương thức thanh toán</div>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue="female"
+                        name="radio-buttons-group"
+                    >
+                        <FormControlLabel
+                            value="female"
+                            control={<Radio />}
+                            defaultChecked
+                            label="Chuyển khoản ngân hàng qua mã QR"
+                        />
+                    </RadioGroup>
+                </div>
+
                 <Button
-                    className="mt-3 py-3 w-75 border rounded-pill align-self-center "
+                    className="mt-5 py-3 w-75 border rounded-pill align-self-center "
                     variant="danger"
                     type="submit"
                 >
                     {loading ? (
                         <Spinner animation="border" variant="light" className="fs-5" />
                     ) : (
-                        <span>Đặt hàng</span>
+                        <span>Thanh toán</span>
                     )}
                 </Button>
             </Form>
