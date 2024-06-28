@@ -26,7 +26,7 @@ export const getCartApi = async (args: { userId: string }) => {
     });
 };
 
-export const deleteItemFromCart = async (args: { userId: string; phoneId: string }) => {
+export const deleteItemFromCart = async (args: { userId: string; productId: string }) => {
     return await POST({
         url: APIConfig.DELETE_ITEM_FROM_CART,
         params: args,

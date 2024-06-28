@@ -9,13 +9,17 @@ import DialogTechnicalItem from 'components/dialog-technical-item';
 import TechnicalCommonItem from 'components/technical-common-item';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/store';
 import { convertToVND, scrollToTop } from 'utils';
-import { IColors, IItem } from 'utils/interface';
+import { IColors, IItem, IProductItem } from 'utils/interface';
 import './style.scss';
+import { addToCartApi } from 'service/cart.service';
+import { pushSnackbar } from 'redux/reducer/snackbar';
+import { addToPurchase } from 'pages/Cart/purchaseSlice';
 
 function LayoutDetailItem({ item }: { item: IItem }) {
+    const dispatch = useDispatch();
     const isTablet = useMediaQuery('(max-width: 1024px)');
     const userInfo = useSelector((state: RootState) => state.userInfoState);
     const [indexCarousel, setIndexCarousel] = useState<number>(0);
@@ -62,6 +66,23 @@ function LayoutDetailItem({ item }: { item: IItem }) {
         return <h2>Loading...</h2>;
     }
 
+    const handleAddItemsToCart = async () => {
+        if (userInfo.email) {
+            await addToCartApi({
+                userId: userInfo._id,
+                productId: item._id,
+                color: item.colors?.length ? item.colors[0].color : undefined,
+                quantity: 1,
+            });
+            dispatch(
+                pushSnackbar({
+                    content: 'Thêm vào giỏ hàng thành công',
+                }),
+            );
+        }
+        // dispatch(addToCart(phoneAddToCart));
+    };
+
     // Thêm vào giỏ hàng
     const handleAddToCart = async () => {
         if (userInfo.email) {
@@ -92,6 +113,19 @@ function LayoutDetailItem({ item }: { item: IItem }) {
         });
 
         return tempElement.innerHTML;
+    };
+
+    const handleBuy = () => {
+        dispatch(
+            addToPurchase([
+                {
+                    productId: item._id,
+                    color: phoneColor.color ? phoneColor.color : undefined,
+                    quantity: 1,
+                    productInfo: item,
+                },
+            ]),
+        );
     };
 
     return (
@@ -260,13 +294,13 @@ function LayoutDetailItem({ item }: { item: IItem }) {
                     <div className="mt-4">
                         <Row className="g-2">
                             <Col xs={8}>
-                                <ButtonBuy />
+                                <ButtonBuy clickFunc={handleBuy} />
                             </Col>
                             <Col xs={4}>
                                 <Button
                                     variant="outline-danger"
                                     className=" w-100 h-100 d-flex flex-column align-items-center "
-                                    onClick={handleAddToCart}
+                                    onClick={handleAddItemsToCart}
                                 >
                                     <FontAwesomeIcon className="mt-1 fs-5" icon={faCartPlus} />
 

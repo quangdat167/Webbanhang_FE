@@ -25,6 +25,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { convertToVND, formatNumberWithCommas } from 'utils';
 import { IColors, IFrequentProducts, IPhone, IPrices, IProductItem } from 'utils/interface';
 import './style.scss';
+import { addToPurchase } from 'pages/Cart/purchaseSlice';
+import DialogSuggestItems, { MODESUGGEST } from 'components/dialog-suggest-items';
 
 function PhonePage() {
     const isTablet = useMediaQuery('(max-width: 1024px)');
@@ -44,6 +46,8 @@ function PhonePage() {
     const [showBtnShowMore, setShowBtnShowMore] = useState(true);
     const [showMoreDetail, setShowMoreDetail] = useState(false);
     const [openPopupSignIn, setOpenPopupSignIn] = useState(false);
+    const [openDialogSuggest, setOpenDialogSuggest] = useState(false);
+    const [modeSuggest, setModeSuggest] = useState(MODESUGGEST.CART);
 
     // useEffect(() => {
     //     scrollToTop();
@@ -119,6 +123,8 @@ function PhonePage() {
                     content: 'Thêm vào giỏ hàng thành công',
                 }),
             );
+            setModeSuggest(MODESUGGEST.CART);
+            setOpenDialogSuggest(true);
         } else {
             setOpenPopupSignIn(true);
         }
@@ -166,6 +172,21 @@ function PhonePage() {
         });
 
         return tempElement.innerHTML;
+    };
+    const handleBuy = () => {
+        setModeSuggest(MODESUGGEST.BUY);
+        setOpenDialogSuggest(true);
+        dispatch(
+            addToPurchase([
+                {
+                    productId: phone._id,
+                    color: phoneColor.color,
+                    quantity: 1,
+                    type: phonePrice.type,
+                    productInfo: phone,
+                },
+            ]),
+        );
     };
 
     return (
@@ -465,7 +486,7 @@ function PhonePage() {
                     <div className="mt-4">
                         <Row className="g-2">
                             <Col xs={8}>
-                                <ButtonBuy />
+                                <ButtonBuy clickFunc={handleBuy} />
                             </Col>
                             <Col xs={4}>
                                 <Button
@@ -534,6 +555,16 @@ function PhonePage() {
                 setOpen={setOpenDialogTechnical}
             />
             <PopupSignIn open={openPopupSignIn} setOpen={setOpenPopupSignIn} />
+            {frequentProducts?.frequentItems?.length && (
+                <DialogSuggestItems
+                    open={openDialogSuggest}
+                    setOpen={setOpenDialogSuggest}
+                    items={frequentProducts?.frequentItems?.map(
+                        (frequentProduct) => frequentProduct.itemDetails,
+                    )}
+                    mode={modeSuggest}
+                />
+            )}
         </Container>
     );
 }

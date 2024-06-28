@@ -27,8 +27,8 @@ function Cart() {
         }
     };
 
-    const deleteItemFromCartFunc = async (phoneId: string) => {
-        await deleteItemFromCart({ userId: userInfo._id, phoneId });
+    const deleteItemFromCartFunc = async (productId: string) => {
+        await deleteItemFromCart({ userId: userInfo._id, productId });
     };
 
     useEffect(() => {
@@ -60,7 +60,7 @@ function Cart() {
         <div className="mx-auto mt-3 cart-wrapper" style={{ maxWidth: '40rem' }}>
             <h4 className="mb-3 text-center text-root">Giỏ hàng</h4>
             <div className="cart-content-wrapper">
-                {cartsStore?.products?.length &&
+                {cartsStore?.products?.length ? (
                     cartsStore?.products?.map((cart, index) => {
                         const imageShow = cart.productInfo?.colors?.length
                             ? cart.productInfo?.colors?.find((color) => color.color === cart.color)
@@ -156,22 +156,29 @@ function Cart() {
                                 <hr />
                             </div>
                         );
-                    })}
+                    })
+                ) : (
+                    <div className="fs-3 fw-medium"> Không có sản phẩm nào trong giỏ hàng</div>
+                )}
             </div>
-            <Link
-                to={RouteConfig.CONFIRM_INFO}
-                className="h-100 mt-3 fs-5 w-50 align-self-center "
-                onClick={handleConfirm}
-                children={
-                    <Button
-                        variant="danger"
-                        type="submit"
-                        className="w-100 h-100 py-3 border rounded-pill"
-                    >
-                        <span>Xác nhận</span>
-                    </Button>
-                }
-            />
+            {cartsStore?.products?.length ? (
+                <Link
+                    to={RouteConfig.CONFIRM_INFO}
+                    className="h-100 mt-3 fs-5 w-50 align-self-center "
+                    onClick={handleConfirm}
+                    children={
+                        <Button
+                            variant="danger"
+                            type="submit"
+                            className="w-100 h-100 py-3 border rounded-pill"
+                        >
+                            <span>Xác nhận</span>
+                        </Button>
+                    }
+                />
+            ) : (
+                <></>
+            )}
         </div>
     );
 }

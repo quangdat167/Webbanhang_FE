@@ -85,7 +85,7 @@ const AdminAddPhone = () => {
 
     return (
         <div className="mt-4 container-1200 mx-auto">
-            <h3>Thêm điện thoại mới</h3>
+            <h3>Thêm sản phẩm mới</h3>
 
             <form method="POST" action="/phones/store" onSubmit={handleSubmit}>
                 <div className="mb-3">

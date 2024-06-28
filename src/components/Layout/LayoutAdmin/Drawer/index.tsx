@@ -38,7 +38,7 @@ const listItem = [
     },
     {
         icon: <ControlPointIcon />,
-        text: 'Thêm điện thoại mới',
+        text: 'Thêm sản phẩm mới',
         route: RouteConfig.ADMIN_ADD_PHONE,
     },
     {

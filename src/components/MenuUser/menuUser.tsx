@@ -42,14 +42,14 @@ function MenuUser() {
                     {userInfo.firstName + ' ' + userInfo.lastName}
                 </Link>
                 <ul className="dropdown-menu dropdown-menu-end" data-bs-theme="light">
-                    <li>
+                    {/* <li>
                         <Link className="dropdown-item" to="">
                             Cập nhật thông tin
                         </Link>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                         <hr className="dropdown-divider" />
-                    </li>
+                    </li> */}
                     <li>
                         <Link className="dropdown-item" to={RouteConfig.ORDER}>
                             Lịch sử mua hàng

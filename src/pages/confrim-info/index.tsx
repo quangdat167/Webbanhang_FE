@@ -8,7 +8,8 @@ import { RootState } from 'redux/store';
 import { changUserInfoApi } from 'service/authen.service';
 import { createOrderApi } from 'service/order.service';
 import { getPaymentLinkApi } from 'service/payment.service';
-import { formatNumberWithCommas, generateUniqueOrderCode } from 'utils';
+import { convertToVND, formatNumberWithCommas, generateUniqueOrderCode } from 'utils';
+import Config from 'utils/Config';
 import { IProduct } from 'utils/interface';
 
 function ConfirmInfo() {
@@ -51,7 +52,10 @@ function ConfirmInfo() {
                 color: prod.color ? prod.color : undefined,
                 quantity: prod.quantity,
                 type: prod.type ? prod.type : undefined,
-                price: prod.productInfo?.prices.find((price) => price.type === prod.type)?.price,
+                price:
+                    prod.productInfo?.type === Config.PRODUCT_TYPE.PHONE
+                        ? prod.productInfo?.prices?.find((price) => price.type === prod.type)?.price
+                        : prod.productInfo?.price,
             }),
         );
         const orderCode = generateUniqueOrderCode();
@@ -73,7 +77,7 @@ function ConfirmInfo() {
         // }, 3000);
     };
 
-    const handleSubmitForm = (e: any) => {
+    const handleSubmitForm = async (e: any) => {
         e.preventDefault();
         setLoading(true);
         changeUserInfoFunc();
@@ -92,11 +96,16 @@ function ConfirmInfo() {
                 formatNumberWithCommas(
                     purchaseState.reduce((value, prod) => {
                         let totalPrice = 0;
-                        prod.productInfo?.prices?.forEach((price) => {
-                            if (price.type === prod.type) {
-                                totalPrice = prod.quantity * price.price;
-                            }
-                        });
+
+                        if (prod.productInfo?.type === Config.PRODUCT_TYPE.PHONE) {
+                            prod.productInfo?.prices?.forEach((price) => {
+                                if (price.type === prod.type) {
+                                    totalPrice = prod.quantity * price.price;
+                                }
+                            });
+                        } else if (prod.productInfo?.price) {
+                            totalPrice = prod.productInfo?.price * prod.quantity;
+                        }
                         // console.log('value: ', value);
                         return value + totalPrice;
                     }, 0),
@@ -119,7 +128,7 @@ function ConfirmInfo() {
                     />
                 </Form.Group>
 
-                <Form.Group className="mb-2 " controlId="formBasicPassword">
+                <Form.Group className=" " controlId="formBasicPassword">
                     <Form.Label>Địa chỉ</Form.Label>
                     <Form.Control
                         required
@@ -132,18 +141,25 @@ function ConfirmInfo() {
 
                 <div className="my-3 ">
                     {purchaseState?.map((cart, index) => {
-                        const imageShow = cart.productInfo?.colors?.find(
-                            (color) => color.color === cart.color,
-                        )?.img;
-                        let price = cart.productInfo?.prices?.find(
-                            (price) => price.type === cart.type,
-                        )?.price;
+                        const imageShow = cart.color
+                            ? cart.productInfo?.colors?.find((color) => color.color === cart.color)
+                                  ?.img
+                            : cart.productInfo?.images[0];
 
-                        const newPrice = formatNumberWithCommas(price);
+                        let newPrice = '';
+                        if (cart.productInfo?.type === Config.PRODUCT_TYPE.PHONE) {
+                            let price = cart.productInfo?.prices?.find(
+                                (price) => price.type === cart.type,
+                            )?.price;
+
+                            newPrice = formatNumberWithCommas(price);
+                        } else {
+                            newPrice = convertToVND(cart.productInfo?.price);
+                        }
 
                         return (
-                            <div key={index}>
-                                <div className="d-flex  position-relative align-items-center">
+                            <div key={index} className="mt-4">
+                                <div className="mt-2 d-flex  position-relative align-items-center">
                                     <Image
                                         src={imageShow}
                                         alt="anh"
@@ -160,11 +176,12 @@ function ConfirmInfo() {
                                         </div>
                                         <div className="mb-2">
                                             <div>Số lượng: {cart.quantity}</div>
-                                            <div>Phân loại: {cart.type}</div>
-                                            <div>Màu sắc: {cart.color}</div>
+                                            {cart.type ? <div>Phân loại: {cart.type}</div> : <></>}
+                                            {cart.color ? <div>Màu sắc: {cart.color}</div> : <></>}
                                         </div>
                                     </div>
                                 </div>
+                                {/* <hr /> */}
                             </div>
                         );
                     })}

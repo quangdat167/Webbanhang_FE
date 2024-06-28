@@ -69,7 +69,7 @@ function Home() {
                                     </Link>
                                 </div>
                                 <Link to={`/${phone.type}/${phone.slug}`}>
-                                    <Card.Body style={{ minHeight: '18rem' }}>
+                                    <Card.Body style={{ minHeight: '16rem' }}>
                                         <Card.Title
                                             className="fs-6 fw-bold"
                                             style={{ height: '3rem', color: '#444' }}
@@ -94,7 +94,7 @@ function Home() {
                                         </Card.Text>
                                         {phone.promotion?.length && (
                                             <p
-                                                className="mb-5 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
+                                                className="mb-3 p-2 bg-body-secondary border border-secondary-subtle rounded-2 small"
                                                 style={{ color: '#444' }}
                                             >
                                                 {phone.promotion[0]}
@@ -103,14 +103,14 @@ function Home() {
                                     </Card.Body>
                                 </Link>
 
-                                <div className="position-absolute end-5 bottom-3 v-center text-dark">
+                                {/* <div className="position-absolute end-5 bottom-3 v-center text-dark">
                                     <small className="me-1">Yêu thích</small>
                                     <FontAwesomeIcon
                                         className="text-danger"
                                         size="lg"
                                         icon={faHeart}
                                     />
-                                </div>
+                                </div> */}
                                 {/* <Card.Footer className=" text-center">
                                 <Link to={`/phones/${phone._id}/edit`} className="btn btn-primary ">
                                     Thêm vào giỏ hàng

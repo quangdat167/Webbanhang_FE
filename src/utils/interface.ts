@@ -56,7 +56,7 @@ export interface IProduct {
     color?: string;
     type?: string;
     quantity: number;
-    productInfo?: IPhone;
+    productInfo?: IProductItem;
     price?: number;
 }
 

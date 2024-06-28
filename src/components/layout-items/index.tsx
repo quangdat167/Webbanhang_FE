@@ -54,7 +54,7 @@ function LayoutItems({ getItemFunc, pathname }: { getItemFunc: Function; pathnam
                                         </a>
                                     </div>
                                     <a href={`${pathname}/${item.slug}`}>
-                                        <Card.Body style={{ minHeight: '10rem' }}>
+                                        <Card.Body style={{ minHeight: '8rem' }}>
                                             <Card.Title
                                                 className="fs-6 fw-bold"
                                                 style={{ minHeight: '2rem', color: '#444' }}
@@ -62,20 +62,20 @@ function LayoutItems({ getItemFunc, pathname }: { getItemFunc: Function; pathnam
                                                 {item.name}
                                             </Card.Title>
 
-                                            <Card.Text className="pt-2 pb-4 text-danger fs-5 fw-bold">
+                                            <Card.Text className="pt-2 pb-3 text-danger fs-5 fw-bold">
                                                 {item.price && convertToVND(item.price)}
                                             </Card.Text>
                                         </Card.Body>
                                     </a>
 
-                                    <div className="position-absolute end-5 bottom-3 v-center text-dark">
+                                    {/* <div className="position-absolute end-5 bottom-3 v-center text-dark">
                                         <small className="me-1">Yêu thích</small>
                                         <FontAwesomeIcon
                                             className="text-danger"
                                             size="lg"
                                             icon={faHeart}
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card>
                             </Col>
                         );

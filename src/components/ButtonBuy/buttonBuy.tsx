@@ -1,16 +1,18 @@
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
+import RouteConfig from 'routes/Route';
 
-function ButtonBuy() {
+function ButtonBuy({ clickFunc }: { clickFunc: Function }) {
     return (
-        <>
-            <Button
-                variant="danger"
-                as="input"
-                type="submit"
-                value="Mua ngay"
-                className="h-100 w-100 fw-semibold fs-4"
-            />
-        </>
+        // <Link to={RouteConfig.CONFIRM_INFO}>
+        <Button
+            variant="danger"
+            as="input"
+            value="Mua ngay"
+            className="h-100 w-100 fw-semibold fs-4"
+            onClick={() => clickFunc()}
+        />
+        // </Link>
     );
 }
 

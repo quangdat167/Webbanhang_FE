@@ -32,6 +32,7 @@ function ComparePhone() {
             <ItemCompare
                 phone={compareState?.phone1?._id ? compareState?.phone1 : undefined}
                 action={changeComparePhone1}
+                enableClose={false}
             />
             <ItemCompare
                 phone={compareState?.phone2?._id ? compareState?.phone2 : undefined}

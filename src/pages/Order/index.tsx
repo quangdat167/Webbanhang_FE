@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from 'redux/store';
 import { deleteItemFromCart } from 'service/cart.service';
-import { formatNumberWithCommas } from 'utils';
+import { convertToVND, formatNumberWithCommas } from 'utils';
 // import { addToCart, deleteFromCart } from './CartSlice';
 import moment from 'moment';
 import { addOrders } from 'redux/reducer/order';
 import { getAllOrdersApi } from 'service/order.service';
 import './style.scss';
+import Config from 'utils/Config';
 
 function Order() {
     const dispatch = useDispatch();
@@ -19,14 +20,14 @@ function Order() {
     const ordersState = useSelector((state: RootState) => state.orderState);
 
     const getCartFunc = async () => {
-        const result = await getAllOrdersApi({ userId: userInfo._id });
+        let result = await getAllOrdersApi({ userId: userInfo._id });
         if (result) {
+            result = result.sort(
+                (a: any, b: any) =>
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            );
             dispatch(addOrders(result));
         }
-    };
-
-    const deleteItemFromCartFunc = async (phoneId: string) => {
-        await deleteItemFromCart({ userId: userInfo._id, phoneId });
     };
 
     useEffect(() => {
@@ -39,15 +40,6 @@ function Order() {
         // if (cartsJson) setCarts(JSON.parse(cartsJson));
         userInfo.email && getCartFunc();
     }, [userInfo.email]);
-
-    // useEffect(() => {
-    //     setCarts(cartsStore);
-    // }, [cartsStore]);
-
-    const handleDeleteItem = (id: string) => {
-        // dispatch(deleteFromCart(id));
-        deleteItemFromCartFunc(id);
-    };
 
     return (
         <div className="mx-auto mt-3 cart-wrapper" style={{ maxWidth: '40rem' }}>
@@ -62,16 +54,21 @@ function Order() {
                         ),
                     );
                     return (
-                        <div className="mb-3 ">
+                        <div className="mb-3 p-3 border rounded-2 overflow-hidden ">
                             {order?.products?.map((cart, index) => {
                                 const imageShow = cart.productInfo?.colors?.find(
                                     (color) => color.color === cart.color,
                                 )?.img;
-                                let price = cart.productInfo?.prices?.find(
-                                    (price) => price.type === cart.type,
-                                )?.price;
+                                let newPrice = '';
+                                if (cart.productInfo?.type === Config.PRODUCT_TYPE.PHONE) {
+                                    let price = cart.productInfo?.prices?.find(
+                                        (price) => price.type === cart.type,
+                                    )?.price;
 
-                                const newPrice = formatNumberWithCommas(price);
+                                    newPrice = formatNumberWithCommas(price);
+                                } else {
+                                    convertToVND(cart.productInfo?.price);
+                                }
 
                                 return (
                                     <div key={index}>
@@ -95,8 +92,16 @@ function Order() {
                                                 </div>
                                                 <div className="mb-2">
                                                     <div>Số lượng: {cart.quantity}</div>
-                                                    <div>Phân loại: {cart.type}</div>
-                                                    <div>Màu sắc: {cart.color}</div>
+                                                    {cart.type ? (
+                                                        <div>Phân loại: {cart.type}</div>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                    {cart.color ? (
+                                                        <div>Màu sắc: {cart.color}</div>
+                                                    ) : (
+                                                        <></>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -127,7 +132,7 @@ function Order() {
                                 </div>
                             </div>
 
-                            <hr />
+                            {/* <hr /> */}
                         </div>
                     );
                 })}

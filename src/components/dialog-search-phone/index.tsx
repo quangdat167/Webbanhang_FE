@@ -39,8 +39,8 @@ export default function DialogSearchPhone({ open, setOpen }: { open: boolean; se
             const result = await getAllPhonesApi();
             setPhones(result);
         };
-        getPhones();
-    }, []);
+        open && getPhones();
+    }, [open]);
 
     return (
         <>

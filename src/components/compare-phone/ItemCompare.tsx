@@ -7,7 +7,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useDispatch } from 'react-redux';
 
-function ItemCompare({ phone, action }: { phone?: IPhone; action: any }) {
+function ItemCompare({
+    phone,
+    action,
+    enableClose = true,
+}: {
+    phone?: IPhone;
+    action: any;
+    enableClose?: boolean;
+}) {
     const dispatch = useDispatch();
     const [openDialogSearchPhone, setOpenDialogSearchPhone] = useState(false);
     const handleAddComparePhone = () => {
@@ -18,20 +26,22 @@ function ItemCompare({ phone, action }: { phone?: IPhone; action: any }) {
             <>
                 <img src={phone?.colors[0].img} alt="phone" width={50} />
                 <div>{phone?.name}</div>
-                <IconButton
-                    aria-label="close"
-                    onClick={() => {
-                        action && dispatch(action({}));
-                    }}
-                    sx={{
-                        position: 'absolute',
-                        right: 4,
-                        top: 4,
-                        // color: 'white',
-                    }}
-                >
-                    <CloseIcon fontSize="small" />
-                </IconButton>
+                {enableClose && (
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => {
+                            action && dispatch(action({}));
+                        }}
+                        sx={{
+                            position: 'absolute',
+                            right: 4,
+                            top: 4,
+                            // color: 'white',
+                        }}
+                    >
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                )}
             </>
         </div>
     ) : (
