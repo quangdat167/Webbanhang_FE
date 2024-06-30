@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Container,
     TextField,
@@ -11,118 +11,86 @@ import {
     ListItem,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { getProductBySlugApi } from 'service/product.service';
+import { updateProductApi } from 'service/order.service';
 
 const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     textAlign: 'center',
 }));
 
-const initialProductData = {
-    name: '',
-    // slug: '',
-    type: '',
-    brand: '',
-    priority: 0,
-    specifications: [''],
-    prices: [{ type: '', price: 0 }],
-    promotion: [''],
-    colors: [{ img: '', color: '' }],
-    images: [''],
-    description: [''],
+const productData = {
+    name: 'iPhone 15 Pro Max',
+    slug: 'iphone-15-pro-max',
+    type: 'phone',
+    brand: 'apple',
+    priority: 5,
+    specifications: ['6.7"', 'Super Retina XDR'],
+    prices: [
+        { type: '256GB', price: 30990000 },
+        { type: '512GB', price: 37990000 },
+        { type: '1TB', price: 44990000 },
+    ],
+    promotion: [
+        'Cơ hội trúng 30 Bộ Quà Gia Dụng trị giá đến 25 triệu',
+        'Thu cũ Đổi mới: Giảm đến 2 triệu (Tuỳ model máy cũ, Không kèm thanh toán qua cổng online, mua kèm)',
+    ],
+    colors: [
+        {
+            img: 'https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-blue-thumbnew-200x200.jpg',
+            color: 'Titan xanh',
+        },
+        {
+            img: 'https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-black-thumbnew-200x200.jpg',
+            color: 'Titan đen',
+        },
+        {
+            img: 'https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-gold-thumbnew-200x200.jpg',
+            color: 'Titan tự nhiên',
+        },
+        {
+            img: 'https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-white-thumbnew-200x200.jpg',
+            color: 'Titan trắng',
+        },
+    ],
+    images: [
+        'https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-4-1020x570.jpg',
+        // more images...
+    ],
+    description: [
+        'Tăng độ cứng cáp và tối ưu khối lượng với chất liệu Titan',
+        'Bứt phá mọi giới hạn về hiệu năng nhờ chip A17 Pro',
+        // more descriptions...
+    ],
     technical_infos: [
         {
             name: 'Màn hình',
             details: [
-                { title: 'Công nghệ màn hình', infos: [''] },
-                { title: 'Độ phân giải', infos: [''] },
-                { title: 'Màn hình rộng', infos: [''] },
-                { title: 'Độ sáng tối đa', infos: [''] },
-                { title: 'Mặt kính cảm ứng', infos: [''] },
+                { title: 'Công nghệ màn hình', infos: ['OLED'] },
+                { title: 'Độ phân giải', infos: ['Super Retina XDR (1290 x 2796 Pixels)'] },
+                // more details...
             ],
         },
-        {
-            name: 'Camera sau',
-            details: [
-                { title: 'Độ phân giải', infos: [''] },
-                { title: 'Quay phim', infos: [''] },
-                { title: 'Đèn Flash', infos: [''] },
-                { title: 'Tính năng', infos: [''] },
-            ],
-        },
-        {
-            name: 'Camera trước',
-            details: [
-                { title: 'Độ phân giải', infos: [''] },
-                { title: 'Tính năng', infos: [''] },
-            ],
-        },
-        {
-            name: 'Hệ điều hành & CPU',
-            details: [
-                { title: 'Hệ điều hành', infos: [''] },
-                { title: 'Chip xử lý (CPU)', infos: [''] },
-                { title: 'Tốc độ CPU', infos: [''] },
-                { title: 'Chip đồ họa (GPU)', infos: [''] },
-            ],
-        },
-        {
-            name: 'Bộ nhớ & Lưu trữ',
-            details: [
-                { title: 'RAM', infos: [''] },
-                { title: 'Dung lượng lưu trữ', infos: [''] },
-                { title: 'Dung lượng còn lại (khả dụng) khoảng', infos: [''] },
-                { title: 'Danh bạ', infos: [''] },
-            ],
-        },
-        {
-            name: 'Kết nối',
-            details: [
-                { title: 'Mạng di động', infos: [''] },
-                { title: 'SIM', infos: [''] },
-                { title: 'Wifi', infos: [''] },
-                { title: 'GPS', infos: [''] },
-                { title: 'Bluetooth', infos: [''] },
-                { title: 'Cổng kết nối/sạc', infos: [''] },
-                { title: 'Jack tai nghe', infos: [''] },
-                { title: 'Kết nối khác', infos: [''] },
-            ],
-        },
-        {
-            name: 'Pin & Sạc',
-            details: [
-                { title: 'Dung lượng pin', infos: [''] },
-                { title: 'Loại pin', infos: [''] },
-                { title: 'Hỗ trợ sạc tối đa', infos: [''] },
-                { title: 'Công nghệ pin', infos: [''] },
-            ],
-        },
-        {
-            name: 'Tiện ích',
-            details: [
-                { title: 'Bảo mật nâng cao', infos: [''] },
-                { title: 'Tính năng đặc biệt', infos: [''] },
-                { title: 'Kháng nước, bụi', infos: [''] },
-                { title: 'Ghi âm', infos: [''] },
-                { title: 'Xem phim', infos: [''] },
-                { title: 'Nghe nhạc', infos: [''] },
-            ],
-        },
-        {
-            name: 'Thông tin chung',
-            details: [
-                { title: 'Thiết kế', infos: [''] },
-                { title: 'Chất liệu', infos: [''] },
-                { title: 'Kích thước, khối lượng', infos: [''] },
-                { title: 'Thời điểm ra mắt', infos: [''] },
-                { title: 'Hãng', infos: [''] },
-            ],
-        },
+        // more technical_infos...
     ],
-    remain: 0,
+    remain: 100,
 };
 
-function AdminAddProduct() {
-    const [product, setProduct] = useState<any>(initialProductData);
+function AdminEditProduct() {
+    const [product, setProduct] = useState<any>(productData);
+    const { slug } = useParams<{ slug: string }>();
+
+    useEffect(() => {
+        const fetchPhone = async () => {
+            if (slug) {
+                const result = await getProductBySlugApi({ slug: slug });
+                setProduct(result);
+            }
+        };
+        fetchPhone();
+    }, [slug]);
 
     const handleChange = (field: string, value: any) => {
         setProduct((prevProduct: any) => ({ ...prevProduct, [field]: value }));
@@ -134,14 +102,6 @@ function AdminAddProduct() {
                 idx === index ? { ...item, [key]: value } : item,
             );
             return { ...prevProduct, [field]: updatedField };
-        });
-    };
-
-    const handleTechnicalInfoChange = (techIndex: number, detailIndex: number, value: any) => {
-        setProduct((prevProduct: any) => {
-            const updatedTechnicalInfos = [...prevProduct.technical_infos];
-            updatedTechnicalInfos[techIndex].details[detailIndex].infos = value.split(', ');
-            return { ...prevProduct, technical_infos: updatedTechnicalInfos };
         });
     };
 
@@ -165,19 +125,17 @@ function AdminAddProduct() {
 
     const handleSave = async () => {
         try {
-            // await createProductApi({ product });
-            console.log('Product data:', product);
-
-            alert('Product added successfully');
+            await updateProductApi({ slug: product.slug, product });
+            alert('Lưu thành công');
         } catch (error) {
-            console.error('Error adding product:', error);
+            console.error('Error saving product data:', error);
         }
     };
 
     return (
         <Container maxWidth="lg">
             <Typography variant="h4" gutterBottom>
-                Add New Product
+                Edit Product: {product.name}
             </Typography>
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
@@ -191,7 +149,7 @@ function AdminAddProduct() {
                             />
                         </Item>
                     </Grid>
-                    {/* <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6}>
                         <Item>
                             <TextField
                                 fullWidth
@@ -200,7 +158,7 @@ function AdminAddProduct() {
                                 onChange={(e) => handleChange('slug', e.target.value)}
                             />
                         </Item>
-                    </Grid> */}
+                    </Grid>
                     <Grid item xs={12} md={6}>
                         <Item>
                             <TextField
@@ -246,6 +204,7 @@ function AdminAddProduct() {
                     <Grid item xs={12}>
                         <Item>
                             <Typography variant="h6">Specifications</Typography>
+
                             <List>
                                 {product.specifications.map((spec: any, index: any) => (
                                     <ListItem key={index}>
@@ -276,6 +235,7 @@ function AdminAddProduct() {
                     <Grid item xs={12}>
                         <Item>
                             <Typography variant="h6">Prices</Typography>
+
                             <List>
                                 {product.prices.map((price: any, index: any) => (
                                     <ListItem key={index}>
@@ -319,6 +279,7 @@ function AdminAddProduct() {
                     <Grid item xs={12}>
                         <Item>
                             <Typography variant="h6">Promotions</Typography>
+
                             <List>
                                 {product.promotion.map((promo: any, index: any) => (
                                     <ListItem key={index}>
@@ -349,6 +310,7 @@ function AdminAddProduct() {
                     <Grid item xs={12}>
                         <Item>
                             <Typography variant="h6">Colors</Typography>
+
                             <List>
                                 {product.colors.map((color: any, index: any) => (
                                     <ListItem key={index}>
@@ -391,6 +353,7 @@ function AdminAddProduct() {
                     <Grid item xs={12}>
                         <Item>
                             <Typography variant="h6">Images</Typography>
+
                             <List>
                                 {product.images.map((image: any, index: any) => (
                                     <ListItem key={index}>
@@ -418,6 +381,7 @@ function AdminAddProduct() {
                     <Grid item xs={12}>
                         <Item>
                             <Typography variant="h6">Descriptions</Typography>
+
                             <List>
                                 {product.description.map((desc: any, index: any) => (
                                     <ListItem key={index}>
@@ -452,36 +416,11 @@ function AdminAddProduct() {
                             <Typography variant="h6" className="mb-3">
                                 Technical Infos
                             </Typography>
-                            {product.technical_infos.map((info: any, techIndex: any) => (
-                                <Box key={techIndex} sx={{ marginBottom: 2 }}>
+                            {product.technical_infos.map((info: any, index: any) => (
+                                <Box key={index} sx={{ marginBottom: 2 }}>
                                     <Typography variant="h6" className="mb-2">
                                         {info.name}
                                     </Typography>
-                                    <List>
-                                        {info.details.map((detail: any, detailIndex: any) => (
-                                            <ListItem key={detailIndex}>
-                                                <TextField
-                                                    label="Title"
-                                                    value={detail.title}
-                                                    InputProps={{
-                                                        readOnly: true,
-                                                    }}
-                                                />
-                                                <TextField
-                                                    fullWidth
-                                                    label="Infos"
-                                                    value={detail.infos.join(', ')}
-                                                    onChange={(e) => {
-                                                        handleTechnicalInfoChange(
-                                                            techIndex,
-                                                            detailIndex,
-                                                            e.target.value,
-                                                        );
-                                                    }}
-                                                />
-                                            </ListItem>
-                                        ))}
-                                    </List>
                                     <Button
                                         variant="contained"
                                         color="secondary"
@@ -491,6 +430,48 @@ function AdminAddProduct() {
                                     >
                                         Add Detail
                                     </Button>
+                                    <List>
+                                        {info.details.map((detail: any, idx: any) => (
+                                            <ListItem key={idx}>
+                                                <TextField
+                                                    label="Title"
+                                                    value={detail.title}
+                                                    onChange={(e) => {
+                                                        const updatedDetails = [...info.details];
+                                                        updatedDetails[idx].title = e.target.value;
+                                                        const updatedTechnicalInfos = [
+                                                            ...product.technical_infos,
+                                                        ];
+                                                        updatedTechnicalInfos[index].details =
+                                                            updatedDetails;
+                                                        setProduct({
+                                                            ...product,
+                                                            technical_infos: updatedTechnicalInfos,
+                                                        });
+                                                    }}
+                                                />
+                                                <TextField
+                                                    fullWidth
+                                                    label="Infos"
+                                                    value={detail.infos.join(', ')}
+                                                    onChange={(e) => {
+                                                        const updatedDetails = [...info.details];
+                                                        updatedDetails[idx].infos =
+                                                            e.target.value.split(', ');
+                                                        const updatedTechnicalInfos = [
+                                                            ...product.technical_infos,
+                                                        ];
+                                                        updatedTechnicalInfos[index].details =
+                                                            updatedDetails;
+                                                        setProduct({
+                                                            ...product,
+                                                            technical_infos: updatedTechnicalInfos,
+                                                        });
+                                                    }}
+                                                />
+                                            </ListItem>
+                                        ))}
+                                    </List>
                                 </Box>
                             ))}
                         </Item>
@@ -506,4 +487,4 @@ function AdminAddProduct() {
     );
 }
 
-export default AdminAddProduct;
+export default AdminEditProduct;

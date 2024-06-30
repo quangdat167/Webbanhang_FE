@@ -77,3 +77,12 @@ export const getFrequentProductsApi = (args: { productId: string }) => {
         return data;
     });
 };
+
+export const getAllProductsApi = (args: {}) => {
+    return POST({
+        url: APIConfig.GET_ALL_PRODUCTS,
+        params: args,
+    }).then((data: any) => {
+        return data;
+    });
+};

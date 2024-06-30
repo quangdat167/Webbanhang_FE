@@ -40,7 +40,7 @@ function SignIn() {
                 setIsValidUsername(false);
             }
             if (validator.isEmail(email) === false) {
-                const stringFalseEmail = 'Please enter correct email address';
+                const stringFalseEmail = 'Vui lòng nhập đúng địa chỉ email';
                 inputUsername.current.innerText = stringFalseEmail;
                 setIsBorderNoneUsername(false);
                 setIsValidUsername(false);
@@ -88,7 +88,7 @@ function SignIn() {
                         // const user = userCredential.user;
                     })
                     .catch((error) => {
-                        alert('Sign in failed');
+                        alert('Thông tin đăng nhập không chính xác');
                     });
 
                 setLoading(false);

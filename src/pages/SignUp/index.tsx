@@ -55,7 +55,7 @@ function SignUp() {
                 return;
             }
             if (validator.isEmail(email) === false) {
-                const stringFalseEmail = 'Please enter correct email address';
+                const stringFalseEmail = 'Vui lòng nhập đúng địa chỉ email';
                 inputEmail.current.innerText = stringFalseEmail;
                 setIsBorderNoneEmail(false);
                 setIsValidEmail(false);

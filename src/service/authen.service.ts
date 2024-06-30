@@ -57,3 +57,12 @@ export const changUserInfoApi = (args: { userId: string; phone?: string; address
         return data;
     });
 };
+
+export const getAllUsersApi = (args: {}) => {
+    return POST({
+        url: APIConfig.GET_ALL_USER,
+        params: args,
+    }).then((data: any) => {
+        return data;
+    });
+};

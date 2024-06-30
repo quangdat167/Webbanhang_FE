@@ -25,6 +25,7 @@ class RouteConfig {
     static ADMIN_MANAGE_USER = '/admin/manage-user';
     static ADMIN_MANAGE_ORDER = '/admin/manage-order';
     static ADMIN_MANAGE_FREQUENT_PRODUCT = '/admin/manage-frequent-product';
+    static ADMIN_EDIT_PRODUCT = '/admin/edit-product/:slug';
 }
 
 export default RouteConfig;
